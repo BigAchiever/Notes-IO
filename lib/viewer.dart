@@ -11,11 +11,13 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 class ViewFileScreen extends StatefulWidget {
   final String fileName;
   final String folderName;
+  final String parentFolderName;
+
 
   const ViewFileScreen({
     Key? key,
     required this.fileName,
-    required this.folderName,
+    required this.folderName, required this.parentFolderName,
   }) : super(key: key);
 
   @override
@@ -57,9 +59,9 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
           HttpClientRequest request = await httpClient.getUrl(Uri.parse(
               await FirebaseStorage.instance
                   .ref()
-                  .child('uploads')
-                  .child(widget.folderName)
-                  .child(widget.fileName)
+                  .child(widget.parentFolderName) // Outside Folder
+                  .child(widget.folderName) // Inside Folder
+                  .child(widget.fileName) // File name
                   .getDownloadURL()));
           request.headers.add('Authorization', 'Bearer $token');
           HttpClientResponse response = await request.close();

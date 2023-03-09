@@ -8,9 +8,10 @@ import 'package:ggits/viewer.dart';
 import 'package:path/path.dart' as path;
 
 class FileScreen extends StatefulWidget {
-  const FileScreen({Key? key, required this.folderName}) : super(key: key);
+  const FileScreen({Key? key, required this.parentFolderName, required this.folderName}) : super(key: key);
 
   final String folderName;
+  final String parentFolderName;
 
   @override
   State<FileScreen> createState() => _FileScreenState();
@@ -28,10 +29,10 @@ class _FileScreenState extends State<FileScreen> {
   Future<void> _loadFiles(String folderName) async {
     ListResult result = await FirebaseStorage.instance
         .ref()
-        .child("Censored")
+        .child(widget.parentFolderName)
         .child(widget.folderName) // point to parent folder
 
-        // .child(folderName) // point to subfolder
+    // .child(folderName) // point to subfolder
         .listAll();
     List<String> fileNames = [];
     for (Reference ref in result.items) {
@@ -44,7 +45,7 @@ class _FileScreenState extends State<FileScreen> {
   }
 
   Future<void> _pickFile(String folderName) async {
-    
+
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -58,9 +59,9 @@ class _FileScreenState extends State<FileScreen> {
       // store the uploaded file in the subfolder
       Reference storageReference = FirebaseStorage.instance
           .ref()
-          .child('Censored') //random folder
-          .child(widget.folderName) 
-// .child(folderName) 
+          .child(widget.parentFolderName) //random folder
+          .child(widget.folderName)
+// .child(folderName)
           .child(fileName);
 
       UploadTask uploadTask = storageReference.putFile(file);
@@ -82,8 +83,9 @@ class _FileScreenState extends State<FileScreen> {
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => ViewFileScreen(
-          fileName: fileName,
+          parentFolderName: widget.parentFolderName,
           folderName: widget.folderName,
+          fileName: fileName,
         ),
       ),
     );
