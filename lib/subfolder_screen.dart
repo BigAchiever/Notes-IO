@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 class FolderScreen extends StatefulWidget {
   final String folderName;
 
+
   const FolderScreen({Key? key, required this.folderName}) : super(key: key);
 
   @override
@@ -122,7 +123,7 @@ class _FolderScreenState extends State<FolderScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => FileScreen(folderName: folderName),
+                  builder: (context) => FileScreen(parentFolderName: widget.folderName,folderName: folderName),
                 ),
               );
             },
