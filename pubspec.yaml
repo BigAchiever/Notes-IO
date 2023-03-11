@@ -40,7 +40,6 @@ dependencies:
   firebase_core: ^2.7.0
   firebase_auth: ^4.2.9
   firebase_storage: ^11.0.14
-  syncfusion_flutter_pdfviewer: ^20.4.53
   file_picker: ^5.2.5
   fluttertoast: ^8.2.1
   video_player: ^2.5.2
@@ -51,6 +50,7 @@ dependencies:
   pdftron_flutter: ^1.0.1-8
   rive: ^0.10.2
   firebase_admin: ^0.2.0
+  syncfusion_flutter_core: ^20.4.53
 
 dev_dependencies:
   flutter_test:

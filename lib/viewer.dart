@@ -1,23 +1,22 @@
 import 'dart:io';
-
+import 'package:pdftron_flutter/pdftron_flutter.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pdftron_flutter/pdftron_flutter.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class ViewFileScreen extends StatefulWidget {
   final String fileName;
   final String folderName;
   final String parentFolderName;
 
-
   const ViewFileScreen({
     Key? key,
     required this.fileName,
-    required this.folderName, required this.parentFolderName,
+    required this.folderName,
+    required this.parentFolderName,
   }) : super(key: key);
 
   @override
@@ -56,8 +55,8 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
       if (!file.existsSync()) {
         try {
           HttpClient httpClient = HttpClient();
-          HttpClientRequest request = await httpClient.getUrl(Uri.parse(
-              await FirebaseStorage.instance
+          HttpClientRequest request =
+              await httpClient.getUrl(Uri.parse(await FirebaseStorage.instance
                   .ref()
                   .child(widget.parentFolderName) // Outside Folder
                   .child(widget.folderName) // Inside Folder
@@ -85,7 +84,6 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -95,9 +93,33 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : SfPdfViewer.file(
-              File(_filePath!),
-              canShowPaginationDialog: true,
+          : FutureBuilder<void>(
+              future: PdftronFlutter.openDocument(_filePath!),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error opening document'),
+                    );
+                  } else {
+                    // Check that the returned value is a widget
+                    if (snapshot.data is Widget) {
+                      return snapshot.data;
+                    } else {
+                      Future.delayed(Duration(seconds: 1), () {
+                        Navigator.pop(context);
+                      });
+                      return Center(
+                        child: Text('Closing document'),
+                      );
+                    }
+                  }
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
     );
   }
