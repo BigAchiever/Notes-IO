@@ -94,11 +94,12 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
               child: CircularProgressIndicator(),
             )
           : FutureBuilder<void>(
+            
               future: PdftronFlutter.openDocument(_filePath!),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasError) {
-                    return Center(
+                    return const Center(
                       child: Text('Error opening document'),
                     );
                   } else {
@@ -106,10 +107,10 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
                     if (snapshot.data is Widget) {
                       return snapshot.data;
                     } else {
-                      Future.delayed(Duration(seconds: 1), () {
+                      Future.delayed(const Duration(seconds: 1), () {
                         Navigator.pop(context);
                       });
-                      return Center(
+                      return const Center(
                         child: Text('Closing document'),
                       );
                     }

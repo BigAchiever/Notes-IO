@@ -42,14 +42,12 @@ dependencies:
   firebase_storage: ^11.0.14
   file_picker: ^5.2.5
   fluttertoast: ^8.2.1
-  video_player: ^2.5.2
   path_provider: ^2.0.13
-  image_picker: ^0.8.6+4
   path: 
   google_sign_in: ^6.0.2
   pdftron_flutter: ^1.0.1-8
   rive: ^0.10.2
-  firebase_admin: ^0.2.0
+  connectivity: ^3.0.6
   syncfusion_flutter_core: ^20.4.53
 
 dev_dependencies:
@@ -62,6 +60,26 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_launcher_icons: "^0.12.0"
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/n.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  adaptive_icon_background: "assets/images/background.png"
+  # web:
+  #   generate: true
+  #   image_path: "path/to/image.png"
+  #   background_color: "#hexcode"
+  #   theme_color: "#hexcode"
+  # windows:
+  #   generate: true
+  #   image_path: "path/to/image.png"
+  #   icon_size: 48 # min:48, max:256, default: 48
+  # macos:
+  #   generate: true
+  #   image_path: "path/to/image.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
