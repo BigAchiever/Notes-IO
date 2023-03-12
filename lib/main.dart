@@ -30,7 +30,10 @@ Future<void> main() async {
     homeScreen = user == null ? const SignInScreen() : const HomeScreen();
   }
 
-  runApp(MyApp(homeScreen: homeScreen));
+  // Delay the routing of the home screen for 3 seconds
+  Future.delayed(const Duration(seconds: 3), () {
+    runApp(MyApp(homeScreen: homeScreen));
+  });
 }
 
 class MyApp extends StatelessWidget {
