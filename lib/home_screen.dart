@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ggits/custom.dart';
 import 'package:ggits/subfolder_screen.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:rive/rive.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    TextEditingController _searchController;
+
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -151,13 +151,23 @@ class _HomeScreenState extends State<HomeScreen>
                     ),
                     filled: true,
                     fillColor: Colors.grey.withOpacity(0.2),
-                    suffixIcon: const Icon(
-                      Icons.search,
-                      color: Colors.red,
+                    suffixIcon: GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: const Icon(
+                        Icons.search,
+                        color: Colors.red,
+                      ),
                     ),
-                    prefixIcon: const Icon(
-                      Icons.menu,
-                      color: Colors.red,
+                    prefixIcon: GestureDetector(
+                      onTap: () {
+                        Scaffold.of(context).openEndDrawer();
+                      },
+                      child: const Icon(
+                        Icons.menu,
+                        color: Colors.red,
+                      ),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 10.0,
@@ -180,11 +190,12 @@ class _HomeScreenState extends State<HomeScreen>
                       text: 'Branch',
                     ),
                     Tab(
-                      text: 'Computer',
+                      text: 'Recents',
                     ),
                   ],
                 ),
               ),
+endDrawer: CustomDrawer(),
               body: folderNames.isEmpty
                   ? const Center(
                       child: CircularProgressIndicator(
@@ -204,6 +215,9 @@ class _HomeScreenState extends State<HomeScreen>
                         return GestureDetector(
                           onTap: () {
                             // Navigate to the folder screen
+
+                            FocusScope.of(context).unfocus(); // unfocus cursor
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -264,73 +278,73 @@ class _HomeScreenState extends State<HomeScreen>
                                       itemBuilder: (_) => const [
                                         PopupMenuItem(
                                           value: 'edit',
-                                          child: Text('Edit'),
+                                          child: Text('Rename'),
                                         ),
                                         PopupMenuItem(
                                           value: 'delete',
-                                          child: Text('Delete'),
+                                          child: Text('Favorites'),
                                         ),
                                       ],
                                       onSelected: (value) async {
-                                        if (value == 'edit') {
+                                        if (value == 'rename') {
                                           // Edit folder
-                                        } else if (value == 'delete') {
+                                        } else if (value == 'favorites') {
                                           //confirmation dialog
-                                          bool confirmed = await showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: const Text(
-                                                    'Confirm Delete'),
-                                                content: const Text(
-                                                    'Are you sure you want to delete this folder?'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context,
-                                                          false); // Return false to indicate cancellation
-                                                    },
-                                                    child: const Text('Cancel'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Navigator.pop(context,
-                                                          true); // Return true to indicate confirmation
-                                                    },
-                                                    child: const Text('Delete'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
+                                          // bool confirmed = await showDialog(
+                                          //   context: context,
+                                          //   builder: (context) {
+                                          //     return AlertDialog(
+                                          //       title: const Text(
+                                          //           'Confirm Delete'),
+                                          //       content: const Text(
+                                          //           'Are you sure you want to delete this folder?'),
+                                          //       actions: [
+                                          //         TextButton(
+                                          //           onPressed: () {
+                                          //             Navigator.pop(context,
+                                          //                 false); // Return false to indicate cancellation
+                                          //           },
+                                          //           child: const Text('Cancel'),
+                                          //         ),
+                                          //         TextButton(
+                                          //           onPressed: () {
+                                          //             Navigator.pop(context,
+                                          //                 true); // Return true to indicate confirmation
+                                          //           },
+                                          //           child: const Text('Delete'),
+                                          //         ),
+                                          //       ],
+                                          //     );
+                                          //   },
+                                          // );
 
-                                          if (confirmed) {
-                                            // Remove the folder name from the list of folder names
-                                            final String folderName =
-                                                folderNames.removeAt(index);
+                                          // if (confirmed) {
+                                          //   // Remove the folder name from the list of folder names
+                                          //   final String folderName =
+                                          //       folderNames.removeAt(index);
 
-                                            // Get the app documents directory
-                                            final Directory appDir =
-                                                await getApplicationDocumentsDirectory();
+                                          //   // Get the app documents directory
+                                          //   final Directory appDir =
+                                          //       await getApplicationDocumentsDirectory();
 
-                                            // Create a File object for the folder to delete
-                                            final Directory folderToDelete =
-                                                Directory(
-                                                    '${appDir.path}/$folderName');
+                                          //   // Create a File object for the folder to delete
+                                          //   final Directory folderToDelete =
+                                          //       Directory(
+                                          //           '${appDir.path}/$folderName');
 
-                                            // Check if the folder exists before deleting it
-                                            if (await folderToDelete.exists()) {
-                                              // Delete the folder and all its contents recursively
-                                              await folderToDelete.delete(
-                                                  recursive: true);
+                                          //   // Check if the folder exists before deleting it
+                                          //   if (await folderToDelete.exists()) {
+                                          //     // Delete the folder and all its contents recursively
+                                          //     await folderToDelete.delete(
+                                          //         recursive: true);
 
-                                              // Clear the list of folder names
-                                              folderNames.clear();
+                                          //     // Clear the list of folder names
+                                          //     folderNames.clear();
 
-                                              // Reload the list of folder names to reflect the deletion
-                                              await _loadFolderNames();
-                                            }
-                                          }
+                                          //     // Reload the list of folder names to reflect the deletion
+                                          //     await _loadFolderNames();
+                                          //   }
+                                          // }
                                         }
                                       },
                                     ),

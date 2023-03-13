@@ -200,11 +200,11 @@ class _FolderScreenState extends State<FolderScreen> {
                                 itemBuilder: (_) => const [
                                   PopupMenuItem(
                                     value: 'edit',
-                                    child: Text('Edit'),
+                                    child: Text('Rename'),
                                   ),
                                   PopupMenuItem(
                                     value: 'delete',
-                                    child: Text('Delete'),
+                                    child: Text('Favorites'),
                                   ),
                                 ],
                                 onSelected: (value) async {
@@ -212,60 +212,60 @@ class _FolderScreenState extends State<FolderScreen> {
                                     // Edit folder
                                   } else if (value == 'delete') {
                                     // Show confirmation dialog before deleting folder
-                                    bool confirmed = await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          title: const Text('Confirm Delete'),
-                                          content: const Text(
-                                            'Are you sure you want to delete this folder?',
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context,
-                                                    false); // Return false to indicate cancellation
-                                              },
-                                              child: const Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context,
-                                                    true); // Return true to indicate confirmation
-                                              },
-                                              child: const Text('Delete'),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                    //   bool confirmed = await showDialog(
+                                    //     context: context,
+                                    //     builder: (context) {
+                                    //       return AlertDialog(
+                                    //         title: const Text('Confirm Delete'),
+                                    //         content: const Text(
+                                    //           'Are you sure you want to delete this folder?',
+                                    //         ),
+                                    //         actions: [
+                                    //           TextButton(
+                                    //             onPressed: () {
+                                    //               Navigator.pop(context,
+                                    //                   false); // Return false to indicate cancellation
+                                    //             },
+                                    //             child: const Text('Cancel'),
+                                    //           ),
+                                    //           TextButton(
+                                    //             onPressed: () {
+                                    //               Navigator.pop(context,
+                                    //                   true); // Return true to indicate confirmation
+                                    //             },
+                                    //             child: const Text('Delete'),
+                                    //           ),
+                                    //         ],
+                                    //       );
+                                    //     },
+                                    //   );
 
-                                    if (confirmed) {
-                                      // Remove the folder name from the list of folder names
-                                      final String folderName =
-                                          folderNames.removeAt(index);
+                                    //   if (confirmed) {
+                                    //     // Remove the folder name from the list of folder names
+                                    //     final String folderName =
+                                    //         folderNames.removeAt(index);
 
-                                      // Get the app documents directory
-                                      final Directory appDir =
-                                          await getApplicationDocumentsDirectory();
+                                    //     // Get the app documents directory
+                                    //     final Directory appDir =
+                                    //         await getApplicationDocumentsDirectory();
 
-                                      // Create a File object for the folder to delete
-                                      final Directory folderToDelete =
-                                          Directory(
-                                              '${appDir.path}/$folderName');
+                                    //     // Create a File object for the folder to delete
+                                    //     final Directory folderToDelete =
+                                    //         Directory(
+                                    //             '${appDir.path}/$folderName');
 
-                                      // Delete the folder from the file system
-                                      if (await folderToDelete.exists()) {
-                                        await folderToDelete.delete(
-                                            recursive: true);
+                                    //     // Delete the folder from the file system
+                                    //     if (await folderToDelete.exists()) {
+                                    //       await folderToDelete.delete(
+                                    //           recursive: true);
 
-                                        // Reload the list of folder names to reflect the deletion
-                                        await _loadFolderNames();
-                                      }
+                                    //       // Reload the list of folder names to reflect the deletion
+                                    //       await _loadFolderNames();
+                                    //     }
 
-                                      // Update the state to remove the folder name from the UI
-                                      setState(() {});
-                                    }
+                                    //     // Update the state to remove the folder name from the UI
+                                    //     setState(() {});
+                                    //   }
                                   }
                                 },
                               ),

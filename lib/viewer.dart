@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:pdftron_flutter/pdftron_flutter.dart';
-import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';

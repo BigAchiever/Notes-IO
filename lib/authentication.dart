@@ -62,11 +62,15 @@ class _SignInScreenState extends State<SignInScreen>
             width: MediaQuery.of(context).size.width,
             duration: const Duration(milliseconds: 260),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 32,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Spacer(),
+                  SizedBox(
+                    height: size.height / 12,
+                  ),
                   SizedBox(
                     width: size.width / 1.2,
                     child: Column(
@@ -82,9 +86,9 @@ class _SignInScreenState extends State<SignInScreen>
                             height: 1.2,
                           ),
                         ),
-                        SizedBox(height: size.height / 40),
+                        SizedBox(height: size.height / 28),
                         Text(
-                          "Access complete handwritten notes from GGITS students with ease. Get high-quality resources to boost your learning now!",
+                          "Access complete handwritten notes from GGITS students with ease.Get high-quality resources to boost your learning now!",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: size.height / 42,
@@ -97,8 +101,9 @@ class _SignInScreenState extends State<SignInScreen>
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: size.height / 20,
+                  Flexible(
+                    flex: 2,
+                    child: Container(),
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -223,7 +228,7 @@ class _SignInScreenState extends State<SignInScreen>
                       ),
                     ],
                   ),
-                  SizedBox(height: size.height / 20),
+                  SizedBox(height: size.height / 30),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
