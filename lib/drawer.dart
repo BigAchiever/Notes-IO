@@ -4,13 +4,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ggits/authentication.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
 
+  @override
+  _CustomDrawerState createState() => _CustomDrawerState();
+}
 
+class _CustomDrawerState extends State<CustomDrawer> {
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -187,17 +195,33 @@ class CustomDrawer extends StatelessWidget {
                               style: TextStyle(color: Colors.white)),
                           onTap: () async {
                             try {
+                              // Show a loading indicator
+                              setState(() {
+                                _isLoading = true;
+                              });
+
                               // sign out from Firebase authentication
                               await FirebaseAuth.instance.signOut();
+
+                              // sign out from Google
+                              await _googleSignIn.signOut();
+
                               // add a delay before navigating to the login screen
                               await Future.delayed(
                                   const Duration(milliseconds: 500));
+
+                              setState(() {
+                                _isLoading = false;
+                              });
+
                               // navigate to login page
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => const SignInScreen()),
                               );
+
+                              // Hide the loading indicator
                             } catch (e) {
                               if (kDebugMode) {
                                 print(e.toString());

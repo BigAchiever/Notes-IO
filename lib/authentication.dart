@@ -20,6 +20,7 @@ class _SignInScreenState extends State<SignInScreen>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -109,6 +110,15 @@ class _SignInScreenState extends State<SignInScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
+                        if (_errorMessage != null)
+                          Text(
+                            _errorMessage!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Color.fromARGB(255, 255, 106, 101),
+                              fontSize: size.height / 56,
+                            ),
+                          ),
                         TextFormField(
                           controller: _emailController,
                           decoration: const InputDecoration(
@@ -156,14 +166,15 @@ class _SignInScreenState extends State<SignInScreen>
                               );
                             } on FirebaseAuthException catch (e) {
                               if (e.code == 'user not found') {
-                                if (kDebugMode) {
-                                  print('No user found for that email.');
-                                }
+                                setState(() {
+                                  _errorMessage =
+                                      'User not found for that email';
+                                });
                               } else if (e.code == 'wrong-password') {
-                                if (kDebugMode) {
-                                  print(
-                                      'Wrong password provided for that user.');
-                                }
+                                setState(() {
+                                  _errorMessage =
+                                      'You are not an Admin,\nPlease Re-check your password';
+                                });
                               } else {
                                 if (kDebugMode) {
                                   print(e.toString());

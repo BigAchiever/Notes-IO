@@ -53,8 +53,8 @@ dependencies:
   flutter_svg: ^2.0.3
   url_launcher: ^6.1.10
   shared_preferences: ^2.0.18
-  permission_handler: ^10.2.0
-  dio:
+
+
 
 dev_dependencies:
   flutter_test:
