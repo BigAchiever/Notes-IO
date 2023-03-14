@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'dart:ui';
-
+import 'package:permission_handler/permission_handler.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -92,6 +95,34 @@ class _FileScreenState extends State<FileScreen> {
     );
   }
 
+  Future<void> _downloadFile(String fileName) async {
+    Reference ref = FirebaseStorage.instance
+        .ref()
+        .child(widget.parentFolderName)
+        .child(widget.folderName)
+        .child(fileName);
+
+    Directory? directory = await getExternalStorageDirectory();
+    String filePath = '${directory?.path}/$fileName';
+
+    File localFile = File(filePath);
+    bool exists = await localFile.exists();
+    if (exists) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('File already exists in local storage.')));
+      return;
+    }
+
+    try {
+      Uint8List? data = await ref.getData();
+      await localFile.writeAsBytes(data!);
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('File downloaded to local storage.')));
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -133,6 +164,27 @@ class _FileScreenState extends State<FileScreen> {
                   final String fileName = _fileNames[index];
                   return GestureDetector(
                     onTap: () => _openFile(fileName),
+                    onLongPress: () => showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: const Text('Download File?'),
+                        content: const Text(
+                            'Do you want to download the file to local storage?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _downloadFile(fileName);
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Download'),
+                          ),
+                        ],
+                      ),
+                    ),
                     child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -142,12 +194,17 @@ class _FileScreenState extends State<FileScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: size.height / 9,
-                            child: Image.asset(
-                              'assets/images/file4.png',
-                              fit: BoxFit.contain,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: size.height / 9,
+                                child: Image.asset(
+                                  'assets/images/file4.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ],
                           ),
                           SizedBox(height: size.height / 60),
                           Flexible(

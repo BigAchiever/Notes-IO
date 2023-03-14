@@ -10,6 +10,8 @@ import 'package:ggits/authentication.dart';
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({Key? key}) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -136,7 +138,7 @@ class CustomDrawer extends StatelessWidget {
                             'assets/images/contact.svg',
                             height: 24,
                             color: Colors.white,
-                          ),
+                          ).animate().flipH(delay: 300.ms, duration: 600.ms),
                           title: const Text('Contact',
                               style: TextStyle(color: Colors.white)),
                           onTap: () async {
@@ -145,7 +147,9 @@ class CustomDrawer extends StatelessWidget {
                             String subject = Uri.encodeComponent(
                                 "I wanted to give/ask you a suggestion/Question");
                             String body = Uri.encodeComponent("Hello there!");
-                            print(subject);
+                            if (kDebugMode) {
+                              print(subject);
+                            }
                             Uri mail = Uri.parse(
                                 "mailto:$email?subject=$subject&body=$body");
                             if (await launchUrl(mail)) {

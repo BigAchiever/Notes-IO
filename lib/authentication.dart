@@ -146,7 +146,9 @@ class _SignInScreenState extends State<SignInScreen>
                                 email: _emailController.text.trim(),
                                 password: _passwordController.text.trim(),
                               );
+
                               // User is signed in
+
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -267,6 +269,7 @@ class _SignInScreenState extends State<SignInScreen>
                                 );
                                 await FirebaseAuth.instance
                                     .signInWithCredential(credential);
+
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

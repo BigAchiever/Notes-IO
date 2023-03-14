@@ -4,7 +4,9 @@ import 'dart:ui';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:ggits/dialoguebox.dart';
 import 'package:ggits/drawer.dart';
+import 'package:ggits/recents.dart';
 
 import 'package:ggits/subfolder_screen.dart';
 import 'package:path_provider/path_provider.dart';
@@ -19,16 +21,48 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  late PageController
+      _pageController; //used for smooth transition between recents and branches
   late List<String> folderNames;
-  String _searchQuery = '';
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _searchQuery = ''; // used for searching folders
+  int _currentIndex = 0; // tabbar index
+  final GlobalKey<ScaffoldState> _scaffoldKey =
+      GlobalKey<ScaffoldState>(); //used for drawer
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this); // switching tabs
+    _pageController = PageController(
+        initialPage: 0,
+        viewportFraction: 1.0); // switching between recents and my branch pages
     folderNames = [];
     _loadFolderNames();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showWelcomeDialog(context); // calling dialogue box
+    });
+  }
+
+  // Whenever user logins this Dialogeu appears
+  Future<void> _showWelcomeDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return CustomDialog(
+          title: 'Hey there, buds!',
+          message:
+              '''⁕ Access to quality handwritten notes by your college mates of different branches and semesters.
+              \n⁕ User-friendly interface for easy navigation and access to notes.
+              \n⁕ Integrated document viewer for easy reading and writing, with several modes, themes, layout customization, and much more!
+              \n⁕ Admin functionality for specific users to upload files and create folders and manage the resources.
+              \n⁕ Users can find all the resources and Notes available here, so now you don't need to switch through several application to access different Study Materials.''',
+          onPressed: () {
+            Navigator.of(dialogContext).pop();
+          },
+        );
+      },
+    );
   }
 
 // Add a method to set the sign in with email flag
@@ -183,7 +217,19 @@ class _HomeScreenState extends State<HomeScreen>
                   },
                 ),
                 bottom: TabBar(
+                  splashBorderRadius: BorderRadius.zero,
+                  splashFactory: NoSplash.splashFactory,
                   controller: _tabController,
+                  onTap: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                      _pageController.animateToPage(
+                        _currentIndex,
+                        duration: const Duration(milliseconds: 600),
+                        curve: Curves.easeOut,
+                      );
+                    });
+                  },
                   indicatorSize: TabBarIndicatorSize.label,
                   indicatorColor: Colors.lightBlueAccent,
                   labelColor: Colors.lightBlueAccent,
@@ -199,166 +245,183 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
 
-              body: folderNames.isEmpty
-                  ? const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.lightBlue,
-                      ),
-                    )
-                  : GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: getFilteredFolders().length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1,
-                      ),
-                      itemBuilder: (BuildContext context, int index) {
-                        final String folderName = getFilteredFolders()[index];
-                        return GestureDetector(
-                          onTap: () {
-                            // Navigate to the folder screen
+              body: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  _tabController.animateTo(
+                    index,
+                    duration: const Duration(milliseconds: 1000),
+                    curve: Curves.ease,
+                  );
+                },
+                children: [
+                  folderNames.isEmpty
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.lightBlue,
+                          ),
+                        )
+                      : GridView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: getFilteredFolders().length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 1,
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            final String folderName =
+                                getFilteredFolders()[index];
+                            return GestureDetector(
+                              onTap: () {
+                                // Navigate to the folder screen
 
-                            FocusScope.of(context).unfocus(); // unfocus cursor
+                                FocusScope.of(context)
+                                    .unfocus(); // unfocus cursor
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => FolderScreen(
-                                  folderName: folderName,
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => FolderScreen(
+                                      folderName: folderName,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                height: 1,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.transparent,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: size.width / 3,
+                                          height: size.height / 7,
+                                          child: Image.asset(
+                                            'assets/images/folder4.gif',
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Flexible(
+                                          flex: 1,
+                                          child: SizedBox(
+                                            width: size.width / 4.5,
+                                            child: Align(
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                folderName,
+                                                style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                        // ---------------------------------Popup menu--------------------------------
+                                        PopupMenuButton(
+                                          itemBuilder: (_) => const [
+                                            PopupMenuItem(
+                                              value: 'edit',
+                                              child: Text('Rename'),
+                                            ),
+                                            PopupMenuItem(
+                                              value: 'delete',
+                                              child: Text('Favorites'),
+                                            ),
+                                          ],
+                                          onSelected: (value) async {
+                                            if (value == 'rename') {
+                                              // Edit folder
+                                            } else if (value == 'favorites') {
+                                              //confirmation dialog
+                                              // bool confirmed = await showDialog(
+                                              //   context: context,
+                                              //   builder: (context) {
+                                              //     return AlertDialog(
+                                              //       title: const Text(
+                                              //           'Confirm Delete'),
+                                              //       content: const Text(
+                                              //           'Are you sure you want to delete this folder?'),
+                                              //       actions: [
+                                              //         TextButton(
+                                              //           onPressed: () {
+                                              //             Navigator.pop(context,
+                                              //                 false); // Return false to indicate cancellation
+                                              //           },
+                                              //           child: const Text('Cancel'),
+                                              //         ),
+                                              //         TextButton(
+                                              //           onPressed: () {
+                                              //             Navigator.pop(context,
+                                              //                 true); // Return true to indicate confirmation
+                                              //           },
+                                              //           child: const Text('Delete'),
+                                              //         ),
+                                              //       ],
+                                              //     );
+                                              //   },
+                                              // );
+
+                                              // if (confirmed) {
+                                              //   // Remove the folder name from the list of folder names
+                                              //   final String folderName =
+                                              //       folderNames.removeAt(index);
+
+                                              //   // Get the app documents directory
+                                              //   final Directory appDir =
+                                              //       await getApplicationDocumentsDirectory();
+
+                                              //   // Create a File object for the folder to delete
+                                              //   final Directory folderToDelete =
+                                              //       Directory(
+                                              //           '${appDir.path}/$folderName');
+
+                                              //   // Check if the folder exists before deleting it
+                                              //   if (await folderToDelete.exists()) {
+                                              //     // Delete the folder and all its contents recursively
+                                              //     await folderToDelete.delete(
+                                              //         recursive: true);
+
+                                              //     // Clear the list of folder names
+                                              //     folderNames.clear();
+
+                                              //     // Reload the list of folder names to reflect the deletion
+                                              //     await _loadFolderNames();
+                                              //   }
+                                              // }
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
                           },
-                          child: Container(
-                            height: 1,
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.transparent,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: size.width / 3,
-                                      height: size.height / 7,
-                                      child: Image.asset(
-                                        'assets/images/folder4.gif',
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Flexible(
-                                      flex: 1,
-                                      child: SizedBox(
-                                        width: size.width / 4.5,
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            folderName,
-                                            style: const TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500),
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                    // ---------------------------------Popup menu--------------------------------
-                                    PopupMenuButton(
-                                      itemBuilder: (_) => const [
-                                        PopupMenuItem(
-                                          value: 'edit',
-                                          child: Text('Rename'),
-                                        ),
-                                        PopupMenuItem(
-                                          value: 'delete',
-                                          child: Text('Favorites'),
-                                        ),
-                                      ],
-                                      onSelected: (value) async {
-                                        if (value == 'rename') {
-                                          // Edit folder
-                                        } else if (value == 'favorites') {
-                                          //confirmation dialog
-                                          // bool confirmed = await showDialog(
-                                          //   context: context,
-                                          //   builder: (context) {
-                                          //     return AlertDialog(
-                                          //       title: const Text(
-                                          //           'Confirm Delete'),
-                                          //       content: const Text(
-                                          //           'Are you sure you want to delete this folder?'),
-                                          //       actions: [
-                                          //         TextButton(
-                                          //           onPressed: () {
-                                          //             Navigator.pop(context,
-                                          //                 false); // Return false to indicate cancellation
-                                          //           },
-                                          //           child: const Text('Cancel'),
-                                          //         ),
-                                          //         TextButton(
-                                          //           onPressed: () {
-                                          //             Navigator.pop(context,
-                                          //                 true); // Return true to indicate confirmation
-                                          //           },
-                                          //           child: const Text('Delete'),
-                                          //         ),
-                                          //       ],
-                                          //     );
-                                          //   },
-                                          // );
-
-                                          // if (confirmed) {
-                                          //   // Remove the folder name from the list of folder names
-                                          //   final String folderName =
-                                          //       folderNames.removeAt(index);
-
-                                          //   // Get the app documents directory
-                                          //   final Directory appDir =
-                                          //       await getApplicationDocumentsDirectory();
-
-                                          //   // Create a File object for the folder to delete
-                                          //   final Directory folderToDelete =
-                                          //       Directory(
-                                          //           '${appDir.path}/$folderName');
-
-                                          //   // Check if the folder exists before deleting it
-                                          //   if (await folderToDelete.exists()) {
-                                          //     // Delete the folder and all its contents recursively
-                                          //     await folderToDelete.delete(
-                                          //         recursive: true);
-
-                                          //     // Clear the list of folder names
-                                          //     folderNames.clear();
-
-                                          //     // Reload the list of folder names to reflect the deletion
-                                          //     await _loadFolderNames();
-                                          //   }
-                                          // }
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                        ),
+                  const RecentsScreen(),
+                ],
+              ),
 
               // ---------------------------------Floating action button starts--------------------------------
               floatingActionButton: Transform.translate(
