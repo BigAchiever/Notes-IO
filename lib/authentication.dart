@@ -31,6 +31,7 @@ class _SignInScreenState extends State<SignInScreen>
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -44,8 +45,10 @@ class _SignInScreenState extends State<SignInScreen>
           ),
           Positioned.fill(
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: const SizedBox(),
+              filter: ImageFilter.blur(sigmaX: 200, sigmaY: 20),
+              child: const SizedBox(
+                height: 100,
+              ),
             ),
           ),
           const RiveAnimation.asset(
@@ -53,6 +56,7 @@ class _SignInScreenState extends State<SignInScreen>
           ),
           Positioned.fill(
             child: BackdropFilter(
+              blendMode: BlendMode.src,
               filter: ImageFilter.blur(sigmaX: 30, sigmaY: 30),
               child: const SizedBox(),
             ),
@@ -110,12 +114,13 @@ class _SignInScreenState extends State<SignInScreen>
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
+                        //error msg if email or pass is wrong
                         if (_errorMessage != null)
                           Text(
                             _errorMessage!,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              color: Color.fromARGB(255, 255, 106, 101),
+                              color: const Color.fromARGB(255, 255, 106, 101),
                               fontSize: size.height / 56,
                             ),
                           ),

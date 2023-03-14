@@ -88,11 +88,18 @@ class _CustomDialogState extends State<CustomDialog>
                     Center(
                       child: TextButton(
                         onPressed: widget.onPressed,
-                        child: const Text(
+                        child: Text(
                           'Understood!',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
+                            shadows: [
+                              Shadow(
+                                offset: const Offset(2, 3),
+                                blurRadius: 0,
+                                color: Colors.black.withOpacity(0.5),
+                              ),
+                            ],
                           ),
                         ),
                       ).animate().fadeIn(duration: 3000.milliseconds),

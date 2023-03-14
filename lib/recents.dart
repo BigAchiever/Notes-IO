@@ -10,7 +10,7 @@ class RecentsScreen extends StatelessWidget {
       child: const Text(
         "Coming soon...\nlike that overdue library book you\nthought to return last year.😷",
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 20, color: Colors.cyan),
+        style: TextStyle(fontSize: 20, color: Colors.cyanAccent),
       ).animate().fadeIn(),
     );
   }

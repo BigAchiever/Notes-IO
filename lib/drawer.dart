@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use, duplicate_ignore
+
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -7,18 +9,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ggits/authentication.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
 
   @override
-  _CustomDrawerState createState() => _CustomDrawerState();
+  State<CustomDrawer> createState() => _CustomDrawerState();
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +129,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           leading: SvgPicture.asset(
                             'assets/images/fire.svg',
                             height: 24,
+                            // ignore: deprecated_member_use
                             color: Colors.white,
                           ).animate().flipH(delay: 300.ms, duration: 600.ms),
                           title: const Text(
@@ -174,6 +175,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           leading: SvgPicture.asset(
                             'assets/images/info.svg',
                             height: 24,
+                            // ignore: deprecated_member_use
                             color: Colors.white,
                           ).animate().flipH(delay: 300.ms, duration: 600.ms),
                           title: const Text('FAQ',
@@ -195,11 +197,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               style: TextStyle(color: Colors.white)),
                           onTap: () async {
                             try {
-                              // Show a loading indicator
-                              setState(() {
-                                _isLoading = true;
-                              });
-
                               // sign out from Firebase authentication
                               await FirebaseAuth.instance.signOut();
 
@@ -209,10 +206,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               // add a delay before navigating to the login screen
                               await Future.delayed(
                                   const Duration(milliseconds: 500));
-
-                              setState(() {
-                                _isLoading = false;
-                              });
 
                               // navigate to login page
                               Navigator.pushReplacement(
