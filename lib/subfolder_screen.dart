@@ -113,14 +113,14 @@ class _FolderScreenState extends State<FolderScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Stack(children: [
-      Positioned(
-        width: MediaQuery.of(context).size.width * 1.7,
-        left: 100,
-        bottom: 100,
-        child: Image.asset(
-          "assets/images/Spline.png",
-        ),
-      ),
+      // Positioned(
+      //   width: MediaQuery.of(context).size.width * 1.7,
+      //   left: 100,
+      //   bottom: 100,
+      //   child: Image.asset(
+      //     "assets/images/Spline.png",
+      //   ),
+      // ),
       Positioned.fill(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 200, sigmaY: 20),
@@ -187,7 +187,7 @@ class _FolderScreenState extends State<FolderScreen> {
                               SizedBox(
                                 height: size.height / 8,
                                 child: Image.asset(
-                                  'assets/images/folder4.gif',
+                                  'assets/images/folder6.gif',
                                   fit: BoxFit.contain,
                                 ),
                               ),

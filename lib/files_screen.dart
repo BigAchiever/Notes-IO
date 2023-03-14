@@ -133,14 +133,14 @@ class _FileScreenState extends State<FileScreen> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Stack(children: [
-      Positioned(
-        width: MediaQuery.of(context).size.width * 1.7,
-        left: 100,
-        bottom: 100,
-        child: Image.asset(
-          "assets/images/Spline.png",
-        ),
-      ),
+      // Positioned(
+      //   width: MediaQuery.of(context).size.width * 1.7,
+      //   left: 100,
+      //   bottom: 100,
+      //   child: Image.asset(
+      //     "assets/images/Spline.png",
+      //   ),
+      // ),
       Positioned.fill(
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 200, sigmaY: 20),
