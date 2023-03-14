@@ -4,7 +4,8 @@ import 'dart:ui';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ggits/custom.dart';
+import 'package:ggits/drawer.dart';
+
 import 'package:ggits/subfolder_screen.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -20,6 +21,7 @@ class _HomeScreenState extends State<HomeScreen>
   late TabController _tabController;
   late List<String> folderNames;
   String _searchQuery = '';
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -139,7 +141,10 @@ class _HomeScreenState extends State<HomeScreen>
             ),
             Scaffold(
               backgroundColor: Colors.transparent,
+              key: _scaffoldKey,
+              drawer: const CustomDrawer(),
               appBar: AppBar(
+                automaticallyImplyLeading: false,
                 backgroundColor: Colors.black87,
                 title: TextField(
                   autofocus: false,
@@ -160,14 +165,12 @@ class _HomeScreenState extends State<HomeScreen>
                         color: Colors.red,
                       ),
                     ),
-                    prefixIcon: GestureDetector(
-                      onTap: () {
-                        Scaffold.of(context).openEndDrawer();
-                      },
-                      child: const Icon(
-                        Icons.menu,
+                    prefixIcon: IconButton(
+                      icon: const Icon(
+                        Icons.menu_rounded,
                         color: Colors.red,
                       ),
+                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 10.0,
@@ -195,7 +198,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ],
                 ),
               ),
-endDrawer: CustomDrawer(),
+
               body: folderNames.isEmpty
                   ? const Center(
                       child: CircularProgressIndicator(

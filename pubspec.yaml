@@ -49,6 +49,9 @@ dependencies:
   rive: ^0.10.2
   connectivity: ^3.0.6
   syncfusion_flutter_core: ^20.4.53
+  flutter_animate: ^4.1.0
+  flutter_svg: ^2.0.3
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:
