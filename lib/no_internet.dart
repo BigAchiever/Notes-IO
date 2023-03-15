@@ -14,7 +14,7 @@ class NoInternetScreen extends StatelessWidget {
             const Icon(Icons.wifi_off, color: Colors.blue, size: 50),
             const SizedBox(height: 16),
             Text(
-              'Wow! You have opened up a wonderful world by turning off your internet connection.',
+              'Wow! You have opened up a wonderful world\nby turning off your internet connection.',
               style: TextStyle(fontSize: 20, color: Colors.green.shade100),
               textAlign: TextAlign.center,
             ),

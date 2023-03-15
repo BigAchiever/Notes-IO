@@ -6,6 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ggits/faq.dart';
+import 'package:ggits/home_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ggits/authentication.dart';
@@ -97,6 +98,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 SizedBox(height: size.height / 100),
                 Expanded(
                   child: ListView(
+                    physics: const NeverScrollableScrollPhysics(),
                     padding: EdgeInsets.zero,
                     children: [
                       Animate(
@@ -106,7 +108,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               .flipH(delay: 300.ms, duration: 600.ms),
                           title: const Text('Home',
                               style: TextStyle(color: Colors.white)),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
                       ),
                       Animate(
@@ -202,7 +206,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           },
                         ),
                       ),
-                      SizedBox(height: size.height / 3.5),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          height: size.height / 4.5,
+                        ),
+                      ),
                       Animate(
                         child: ListTile(
                           leading: SvgPicture.asset(
@@ -240,7 +249,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           },
                         ),
                       ),
-                      SizedBox(height: size.height / 20),
+                      SizedBox(height: size.height / 22),
                       Container(
                         alignment: Alignment.center,
                         child: const Text(

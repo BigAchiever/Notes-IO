@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart';
 
 class FAQScreen extends StatefulWidget {
   const FAQScreen({Key? key}) : super(key: key);
@@ -9,73 +12,110 @@ class FAQScreen extends StatefulWidget {
 
 class _FAQScreenState extends State<FAQScreen> {
   final List<String> _questions = [
-    'How do I reset my password?',
-    'How do I update my profile information?',
-    'Can I cancel my subscription?',
-    'How do I contact customer support?',
+    "Where I can find the notes?",
+    "Who has written these Notes?",
+    "Are the notes Complete according to what was taught in Class?",
+    "How can I Upload my Notes?",
+    "What else we will get here other than notes?",
+    "Notes are also available on Moodle, No?",
+    "Is this application available offline?",
+    "Will we recieve any credits for uploading our notes?"
   ];
 
   final List<String> _answers = [
-    'To reset your password, go to the login screen and click the "Forgot password" link. You will be prompted to enter your email address and follow the instructions in the email that is sent to you.',
-    'To update your profile information, go to your profile page and click the "Edit" button. You can then update your name, profile picture, and other information.',
-    'Yes, you can cancel your subscription at any time by going to your account settings and clicking the "Cancel subscription" button. Note that you will continue to have access to the premium features until the end of your current billing cycle.',
-    'If you need help or have any questions, please contact our customer support team at support@example.com. We are available 24/7 to assist you.'
+    'On Home Page you can find your Branch/Semester folder by scrolling the screen or by searching your Branch/Semester on the Search Bar. After opening you Branch folder you can easily seletc the subject notes you wanna access and tap on it. And there you go!',
+    "These notes are written by your semester peers and are published by them on the application.",
+    "Yes, the notes are complete and containes everything which was taught in class",
+    "Great Initiative, You can easily request to become an admin by opening the menu from home page, click the Request for Admin option in the Menu, fill out the google form and then just wait for our reply!",
+    "We will try to provide all the necessary resources which is required for you guys, so that you all don't have to switch to multiple applications to find study material.",
+    "Yes, its totally your wish which platform you want to prefer, here you will find several modes and options in the reader available to comfortably prepare for your exams which are not available on moodle. Most importantly you won't find Notes by your own batch mates on Moodle!",
+    "Not yet, But looking forward to it in later versions. There is much more to come so stay tuned! 💙",
+    "Yes obviously, We will be that feature soon in future updates!",
   ];
 
   int _selectedQuestionIndex = -1;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('FAQ'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Text(
-              'Frequently Asked Questions',
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            const SizedBox(height: 20),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _questions.length,
-              itemBuilder: (context, index) {
-                return ExpansionTile(
-                  title: Text(
-                    _questions[index],
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  // ignore: sort_child_properties_last
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Text(
-                        _answers[index],
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                    ),
-                  ],
-                  onExpansionChanged: (expanded) {
-                    setState(() {
-                      if (expanded) {
-                        _selectedQuestionIndex = index;
-                      } else {
-                        _selectedQuestionIndex = -1;
-                      }
-                    });
-                  },
-                  initiallyExpanded: _selectedQuestionIndex == index,
-                );
-              },
-            ),
-          ],
+    return Stack(
+      children: [
+        Positioned(
+          width: MediaQuery.of(context).size.width * 1.7,
+          left: 10,
+          bottom: 100,
+          child: Image.asset(
+            "assets/images/Spline.png",
+          ),
         ),
-      ),
+        Positioned.fill(
+          child: BackdropFilter(
+            blendMode: BlendMode.src,
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+            child: const SizedBox(),
+          ),
+        ),
+        Scaffold(
+          backgroundColor: Colors.black87,
+          appBar: AppBar(
+            backgroundColor: Colors.black54,
+            title: const Text('Frequently Asked Questions'),
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 20),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _questions.length,
+                  itemBuilder: (context, index) {
+                    return AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: _selectedQuestionIndex == index
+                            ? Colors.black12
+                            : Colors.black54,
+                      ),
+                      child: ExpansionTile(
+                        title: Text(
+                          _questions[index],
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        onExpansionChanged: (expanded) {
+                          setState(() {
+                            if (expanded) {
+                              _selectedQuestionIndex = index;
+                            } else {
+                              _selectedQuestionIndex = -1;
+                            }
+                          });
+                        },
+                        initiallyExpanded: _selectedQuestionIndex == index,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 10,
+                            ),
+                            child: Text(
+                              _answers[index],
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
