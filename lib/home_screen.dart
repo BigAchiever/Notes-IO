@@ -12,6 +12,7 @@ import 'package:ggits/recents.dart';
 import 'package:ggits/subfolder_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rive/rive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -33,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen>
   int _currentIndex = 0;
   //used for drawer
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-
   User? _user;
 
   @override
@@ -45,18 +45,27 @@ class _HomeScreenState extends State<HomeScreen>
         viewportFraction: 1.0); // switching between recents and my branch pages
     folderNames = [];
     _loadFolderNames();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showWelcomeDialog(context); // calling dialogue box
-    });
 
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      bool dialogShown = prefs.getBool('dialogShown') ??
+          false; //c hecking if the user logged in previousely
+      if (!dialogShown) {
+        // ignore: use_build_context_synchronously
+        _showWelcomeDialog(context);
+        prefs.setBool('dialogShown', true);
+      }
+    });
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      setState(() {
-        _user = user;
-      });
+      if (mounted) {
+        setState(() {
+          _user = user;
+        });
+      }
     });
   }
 
-  // Whenever user logins this Dialogeu appears
+  // Whenever user logins this Dialog appears
   Future<void> _showWelcomeDialog(BuildContext context) async {
     return showDialog<void>(
       context: context,
@@ -215,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen>
                     fillColor: Colors.grey.withOpacity(0.2),
                     suffixIcon: GestureDetector(
                       onTap: () {
-                        FocusScope.of(context).unfocus();
+                        FocusManager.instance.primaryFocus?.unfocus();
                       },
                       child: const Icon(
                         Icons.search,
@@ -227,7 +236,10 @@ class _HomeScreenState extends State<HomeScreen>
                         Icons.menu_rounded,
                         color: Colors.red,
                       ),
-                      onPressed: () => _scaffoldKey.currentState?.openDrawer(),
+                      onPressed: () {
+                        _scaffoldKey.currentState?.openDrawer();
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                     ),
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 10.0,
@@ -299,8 +311,8 @@ class _HomeScreenState extends State<HomeScreen>
                               onTap: () {
                                 // Navigate to the folder screen
 
-                                FocusScope.of(context)
-                                    .unfocus(); // unfocus cursor
+                                FocusManager.instance.primaryFocus
+                                    ?.unfocus(); // unfocus cursor
 
                                 Navigator.push(
                                   context,
@@ -363,8 +375,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         PopupMenuButton(
                                           itemBuilder: (_) => const [
                                             PopupMenuItem(
-                                              value: 'edit',
-                                              child: Text('Rename'),
+                                              value: 'color',
+                                              child: Text('Customize'),
                                             ),
                                             PopupMenuItem(
                                               value: 'delete',
@@ -372,7 +384,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             ),
                                           ],
                                           onSelected: (value) async {
-                                            if (value == 'rename') {
+                                            if (value == 'color') {
                                               // Edit folder
                                             } else if (value == 'favorites') {
                                               //confirmation dialog

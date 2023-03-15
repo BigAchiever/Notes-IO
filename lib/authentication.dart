@@ -126,6 +126,7 @@ class _SignInScreenState extends State<SignInScreen>
                           ),
                         TextFormField(
                           controller: _emailController,
+                          autofocus: false,
                           decoration: const InputDecoration(
                             labelText: 'Email',
                           ),
@@ -139,6 +140,7 @@ class _SignInScreenState extends State<SignInScreen>
                         ),
                         SizedBox(height: size.height / 56),
                         TextFormField(
+                          autofocus: false,
                           controller: _passwordController,
                           decoration: const InputDecoration(
                             labelText: 'Password',
@@ -305,7 +307,7 @@ class _SignInScreenState extends State<SignInScreen>
                             }
                           },
                           child: Text(
-                            "Sign In with Google",
+                            "User Sign In with Google",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,

@@ -95,14 +95,17 @@ class _CustomDialogState extends State<CustomDialog>
                             fontSize: 20,
                             shadows: [
                               Shadow(
-                                offset: const Offset(2, 3),
+                                offset: const Offset(3, 4),
                                 blurRadius: 0,
                                 color: Colors.black.withOpacity(0.5),
                               ),
                             ],
                           ),
                         ),
-                      ).animate().fadeIn(duration: 3000.milliseconds),
+                      )
+                          .animate()
+                          .scaleXY(duration: 3500.milliseconds)
+                          .fadeIn(duration: 3000.milliseconds),
                     ),
                   ],
                 ),

@@ -1,11 +1,11 @@
 // ignore_for_file: deprecated_member_use, duplicate_ignore
-
 import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:ggits/faq.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ggits/authentication.dart';
@@ -106,9 +106,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               .flipH(delay: 300.ms, duration: 600.ms),
                           title: const Text('Home',
                               style: TextStyle(color: Colors.white)),
-                          onTap: () {
-                            // navigate to home page
-                          },
+                          onTap: () {},
                         ),
                       ),
                       Animate(
@@ -119,9 +117,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   .flipH(delay: 300.ms, duration: 600.ms),
                           title: const Text('Favorite',
                               style: TextStyle(color: Colors.white)),
-                          onTap: () {
-                            // navigate to home page
-                          },
+                          onTap: () {},
                         ),
                       ),
                       Animate(
@@ -136,9 +132,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             'Contributions',
                             style: TextStyle(color: Colors.white),
                           ),
-                          onTap: () {
-                            // navigate to home page
-                          },
+                          onTap: () {},
                         ),
                       ),
                       Animate(
@@ -181,7 +175,30 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           title: const Text('FAQ',
                               style: TextStyle(color: Colors.white)),
                           onTap: () {
-                            // navigate to home page
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const FAQScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Animate(
+                        child: ListTile(
+                          leading: SvgPicture.asset(
+                            'assets/images/admin.svg',
+                            height: 24,
+                            color: Colors.white,
+                          ).animate().flipH(delay: 300.ms, duration: 600.ms),
+                          title: const Text(
+                            'Request for Admin',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onTap: () async {
+                            const url =
+                                'https://docs.google.com/forms/d/e/1FAIpQLSdBEFT5v-7922qYeG8s40GkTp9WY-FASA_MWFH8zo2mcGFAlQ/viewform?usp=sf_link';
+                            await launch(url);
                           },
                         ),
                       ),
