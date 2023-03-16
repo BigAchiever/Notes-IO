@@ -98,7 +98,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 SizedBox(height: size.height / 100),
                 Expanded(
                   child: ListView(
-                    physics: const NeverScrollableScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     padding: EdgeInsets.zero,
                     children: [
                       Animate(
@@ -206,11 +206,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
                           },
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Container(
-                          height: size.height / 4.5,
-                        ),
+                      Container(
+                        height: size.height / 4.5,
                       ),
                       Animate(
                         child: ListTile(
@@ -251,12 +248,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                       ),
                       SizedBox(height: size.height / 22),
                       Container(
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'Made with 💙',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
-                        ),
-                      ),
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'Made with 💙',
+                            style: TextStyle(
+                                color: Colors.cyanAccent, fontSize: 16),
+                          )),
                     ],
                   ),
                 ),

@@ -24,6 +24,7 @@ class FileScreen extends StatefulWidget {
 
 class _FileScreenState extends State<FileScreen> {
   List<String> _fileNames = [];
+  bool _isUploading = false;
   User? _user;
   @override
   void initState() {
@@ -74,11 +75,14 @@ class _FileScreenState extends State<FileScreen> {
 
       UploadTask uploadTask = storageReference.putFile(file);
 
+      setState(() {
+        _isUploading = true; // uffff load nahi horaha hai yar
+      });
+
       uploadTask.whenComplete(() {
-        if (kDebugMode) {
-          print('File uploaded');
-        }
         setState(() {
+          _isUploading =
+              false; // loading indicator spotted
           _fileNames.add(fileName);
           _loadFiles(folderName); //  refresh the list
         });
@@ -198,6 +202,12 @@ class _FileScreenState extends State<FileScreen> {
                             },
                             child: const Text('Download'),
                           ),
+                          if (_isUploading) // kam kyu nahi karha bhai tu
+                            const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.lightBlue,
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -368,7 +378,7 @@ class _FileScreenState extends State<FileScreen> {
                       },
                     );
                   },
-                  backgroundColor: Colors.lime,
+                  backgroundColor: Colors.white,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(25),

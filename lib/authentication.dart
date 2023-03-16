@@ -128,12 +128,12 @@ class _SignInScreenState extends State<SignInScreen>
                           controller: _emailController,
                           autofocus: false,
                           decoration: const InputDecoration(
-                            labelText: 'Email',
-                          ),
+                              labelText: 'Email',
+                              hintText: "Only Admins can Sign in"),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter your email';
+                              return "Please enter your email";
                             }
                             return null;
                           },
@@ -143,12 +143,12 @@ class _SignInScreenState extends State<SignInScreen>
                           autofocus: false,
                           controller: _passwordController,
                           decoration: const InputDecoration(
-                            labelText: 'Password',
-                          ),
+                              labelText: "Password",
+                              hintText: "Enter your Authenticated Password"),
                           obscureText: true,
                           validator: (value) {
                             if (value!.isEmpty) {
-                              return 'Please enter your password';
+                              return "Please enter your password";
                             }
                             return null;
                           },
@@ -205,15 +205,17 @@ class _SignInScreenState extends State<SignInScreen>
                             alignment: Alignment.center,
                             width: size.width / 4,
                             height: size.height / 18,
-                            child: Text(
-                              'Admin Sign In',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: size.height / 56,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Poppins',
-                              ),
-                            ),
+                            child: _isLoading
+                                ? CircularProgressIndicator() // show loading animation if loading state is true
+                                : Text(
+                                    'Admin Sign In',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: size.height / 56,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Poppins',
+                                    ),
+                                  ),
                           ),
                         ),
                       ],

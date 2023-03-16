@@ -460,7 +460,7 @@ class _FolderScreenState extends State<FolderScreen> {
                       },
                     );
                   },
-                  backgroundColor: Colors.lime,
+                  backgroundColor: Colors.white,
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(
                       top: Radius.circular(25),

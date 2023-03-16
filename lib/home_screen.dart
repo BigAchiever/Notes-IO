@@ -643,7 +643,7 @@ class _HomeScreenState extends State<HomeScreen>
                             },
                           );
                         },
-                        backgroundColor: Colors.lime,
+                        backgroundColor: Colors.white,
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(25),

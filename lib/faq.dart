@@ -28,9 +28,9 @@ class _FAQScreenState extends State<FAQScreen> {
     "Yes, the notes are complete and containes everything which was taught in class",
     "Great Initiative, You can easily request to become an admin by opening the menu from home page, click the Request for Admin option in the Menu, fill out the google form and then just wait for our reply!",
     "We will try to provide all the necessary resources which is required for you guys, so that you all don't have to switch to multiple applications to find study material.",
-    "Yes, its totally your wish which platform you want to prefer, here you will find several modes and options in the reader available to comfortably prepare for your exams which are not available on moodle. Most importantly you won't find Notes by your own batch mates on Moodle!",
+    "Yes, its totally your wish which platform you want to prefer, here you will find several modes and options in the reader available to comfortably prepare for your exams which you won't get on Moodle and other platforms and Most importantly you won't find Notes by your own batch mates on Moodle with all the important Study material!",
     "Not yet, But looking forward to it in later versions. There is much more to come so stay tuned! 💙",
-    "Yes obviously, We will be that feature soon in future updates!",
+    "Yes obviously, We will be implementing that feature soon in future updates!",
   ];
 
   int _selectedQuestionIndex = -1;
@@ -61,12 +61,15 @@ class _FAQScreenState extends State<FAQScreen> {
             title: const Text('Frequently Asked Questions'),
           ),
           body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: const BouncingScrollPhysics(
+                decelerationRate: ScrollDecelerationRate.normal),
             child: Column(
               children: [
                 const SizedBox(height: 20),
                 ListView.builder(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   itemCount: _questions.length,
                   itemBuilder: (context, index) {
                     return AnimatedContainer(
