@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class _SignInScreenState extends State<SignInScreen>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isAdminLoading = false;
   String? _errorMessage;
 
   @override
@@ -164,8 +166,16 @@ class _SignInScreenState extends State<SignInScreen>
                                 password: _passwordController.text.trim(),
                               );
 
-                              // User is signed in
+                              // Create a new Firestore document with the user's data
+                              await FirebaseFirestore.instance
+                                  .collection('admins')
+                                  .doc(userCredential.user?.uid)
+                                  .set({
+                                'email': userCredential.user?.email,
+                                // add any other user data you want to store here
+                              });
 
+                              // Navigate to the home screen
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -205,17 +215,15 @@ class _SignInScreenState extends State<SignInScreen>
                             alignment: Alignment.center,
                             width: size.width / 4,
                             height: size.height / 18,
-                            child: _isLoading
-                                ? CircularProgressIndicator() // show loading animation if loading state is true
-                                : Text(
-                                    'Admin Sign In',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: size.height / 56,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Poppins',
-                                    ),
-                                  ),
+                            child: Text(
+                              'Admin Sign In',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: size.height / 56,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Poppins',
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -290,6 +298,23 @@ class _SignInScreenState extends State<SignInScreen>
                                 await FirebaseAuth.instance
                                     .signInWithCredential(credential);
 
+                                // Get the user's data
+                                final User user =
+                                    FirebaseAuth.instance.currentUser!;
+                                final userData = {
+                                  'name': user.displayName,
+                                  'email': user.email,
+                                  'photoUrl': user.photoURL,
+                                  // Add any additional data you want to store
+                                };
+
+                                // Storing the user's data in Firestore
+                                await FirebaseFirestore.instance
+                                    .collection('googleUsers')
+                                    .doc(user.uid)
+                                    .set(userData);
+
+                                // Navigate to the home screen
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
@@ -42,7 +43,6 @@ class _FileScreenState extends State<FileScreen> {
         .ref()
         .child(widget.parentFolderName)
         .child(widget.folderName) // point to parent folder
-
         // .child(folderName) // point to subfolder
         .listAll();
     List<String> fileNames = [];
@@ -60,7 +60,9 @@ class _FileScreenState extends State<FileScreen> {
       type: FileType.custom,
       allowedExtensions: ['pdf', 'doc', 'docx', 'txt'],
     );
-
+    setState(() {
+      _isUploading = true; // set the state variable to true when upload starts
+    });
     if (result != null) {
       File file = File(result.files.single.path!);
       String fileName = path.basename(file.path);
@@ -75,15 +77,19 @@ class _FileScreenState extends State<FileScreen> {
 
       UploadTask uploadTask = storageReference.putFile(file);
 
-      setState(() {
-        _isUploading = true; // uffff load nahi horaha hai yar
+      await FirebaseFirestore.instance
+          .collection('admins')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .collection('files')
+          .add({
+        'fileName': fileName,
+        'folderName': folderName,
       });
 
       uploadTask.whenComplete(() {
         setState(() {
-          _isUploading =
-              false; // loading indicator spotted
           _fileNames.add(fileName);
+          _isUploading = false;
           _loadFiles(folderName); //  refresh the list
         });
       });
@@ -169,94 +175,99 @@ class _FileScreenState extends State<FileScreen> {
           backgroundColor: Colors.black54,
           title: Text(widget.folderName),
         ),
-        body: _fileNames.isEmpty
+        body: _isUploading // whenever anyone uploads any file this is called
             ? const Center(
                 child: CircularProgressIndicator(color: Colors.lightBlue),
               )
-            : GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: _fileNames.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1,
-                    mainAxisSpacing: 60),
-                itemBuilder: (BuildContext context, int index) {
-                  final String fileName = _fileNames[index];
-                  return GestureDetector(
-                    onTap: () => _openFile(fileName),
-                    onLongPress: () => showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        title: const Text('Download File?'),
-                        content: const Text(
-                            'Do you want to download the file to local storage?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              _downloadFile(fileName);
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Download'),
-                          ),
-                          if (_isUploading) // kam kyu nahi karha bhai tu
-                            const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.lightBlue,
+            : _fileNames.isEmpty
+                ? const Center(
+                    child: CircularProgressIndicator(color: Colors.lightBlue),
+                  )
+                : GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: _fileNames.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 1,
+                            mainAxisSpacing: 60),
+                    itemBuilder: (BuildContext context, int index) {
+                      final String fileName = _fileNames[index];
+                      return GestureDetector(
+                        onTap: () => _openFile(fileName),
+                        onLongPress: () => showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text('Download File?'),
+                            content: const Text(
+                                'Do you want to download the file to local storage?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Cancel'),
                               ),
-                            ),
-                        ],
-                      ),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.transparent,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
+                              TextButton(
+                                onPressed: () {
+                                  _downloadFile(fileName);
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Download'),
+                              ),
+                              if (_isUploading) // kam kyu nahi karha bhai tu
+                                const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.lightBlue,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.transparent,
+                          ),
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(
-                                height: size.height / 9,
-                                child: Image.asset(
-                                  'assets/images/file4.png',
-                                  fit: BoxFit.contain,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: size.height / 9,
+                                    child: Image.asset(
+                                      'assets/images/file4.png',
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: size.height / 60),
+                              Flexible(
+                                flex: 1,
+                                child: SizedBox(
+                                  width: size.width / 4,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      fileName,
+                                      style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w400),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.visible,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: size.height / 60),
-                          Flexible(
-                            flex: 1,
-                            child: SizedBox(
-                              width: size.width / 4,
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  fileName,
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400),
-                                  maxLines: 3,
-                                  overflow: TextOverflow.visible,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                        ),
+                      );
+                    },
+                  ),
         floatingActionButton: _user?.providerData
                     .any((element) => element.providerId == "google.com") ??
                 true

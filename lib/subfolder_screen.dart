@@ -5,8 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:ggits/files_screen.dart';
+import 'package:ggits/newAsset2.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rive/rive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FolderScreen extends StatefulWidget {
   final String folderName;
@@ -19,6 +21,7 @@ class FolderScreen extends StatefulWidget {
 
 class _FolderScreenState extends State<FolderScreen> {
   late List<String> folderNames;
+  String folderAsset2 = 'assets/images/folder6.gif';
   User? _user;
   @override
   void initState() {
@@ -30,6 +33,15 @@ class _FolderScreenState extends State<FolderScreen> {
       setState(() {
         _user = user;
       });
+    });
+
+    SharedPreferences.getInstance().then((prefs) {
+      final asset2 = prefs.getString('folderAsset2');
+      if (asset2 != null) {
+        setState(() {
+          folderAsset2 = asset2;
+        });
+      }
     });
   }
 
@@ -146,9 +158,24 @@ class _FolderScreenState extends State<FolderScreen> {
           title: Text(widget.folderName),
         ),
         body: folderNames.isEmpty
-            ? const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.lightBlue,
+            ? Center(
+                child: FutureBuilder<void>(
+                  future: Future.delayed(const Duration(seconds: 5)),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done &&
+                        folderNames.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          "No Folders Created yet",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      );
+                    }
+                    return const CircularProgressIndicator(
+                      color: Colors.lightBlue,
+                    );
+                  },
                 ),
               )
             : GridView.builder(
@@ -187,7 +214,7 @@ class _FolderScreenState extends State<FolderScreen> {
                               SizedBox(
                                 height: size.height / 8,
                                 child: Image.asset(
-                                  'assets/images/folder6.gif',
+                                  folderAsset2,
                                   fit: BoxFit.contain,
                                 ),
                               ),
@@ -216,75 +243,35 @@ class _FolderScreenState extends State<FolderScreen> {
                                 ),
                               ),
                               PopupMenuButton(
-                                itemBuilder: (_) => const [
-                                  PopupMenuItem(
-                                    value: 'edit',
-                                    child: Text('Rename'),
+                                itemBuilder: (_) => [
+                                  const PopupMenuItem(
+                                    value: 'customize',
+                                    child: Text('Customize'),
                                   ),
-                                  PopupMenuItem(
-                                    value: 'delete',
+                                  const PopupMenuItem(
+                                    value: 'favorites',
                                     child: Text('Favorites'),
                                   ),
                                 ],
                                 onSelected: (value) async {
-                                  if (value == 'edit') {
-                                    // Edit folder
-                                  } else if (value == 'delete') {
-                                    // Show confirmation dialog before deleting folder
-                                    //   bool confirmed = await showDialog(
-                                    //     context: context,
-                                    //     builder: (context) {
-                                    //       return AlertDialog(
-                                    //         title: const Text('Confirm Delete'),
-                                    //         content: const Text(
-                                    //           'Are you sure you want to delete this folder?',
-                                    //         ),
-                                    //         actions: [
-                                    //           TextButton(
-                                    //             onPressed: () {
-                                    //               Navigator.pop(context,
-                                    //                   false); // Return false to indicate cancellation
-                                    //             },
-                                    //             child: const Text('Cancel'),
-                                    //           ),
-                                    //           TextButton(
-                                    //             onPressed: () {
-                                    //               Navigator.pop(context,
-                                    //                   true); // Return true to indicate confirmation
-                                    //             },
-                                    //             child: const Text('Delete'),
-                                    //           ),
-                                    //         ],
-                                    //       );
-                                    //     },
-                                    //   );
-
-                                    //   if (confirmed) {
-                                    //     // Remove the folder name from the list of folder names
-                                    //     final String folderName =
-                                    //         folderNames.removeAt(index);
-
-                                    //     // Get the app documents directory
-                                    //     final Directory appDir =
-                                    //         await getApplicationDocumentsDirectory();
-
-                                    //     // Create a File object for the folder to delete
-                                    //     final Directory folderToDelete =
-                                    //         Directory(
-                                    //             '${appDir.path}/$folderName');
-
-                                    //     // Delete the folder from the file system
-                                    //     if (await folderToDelete.exists()) {
-                                    //       await folderToDelete.delete(
-                                    //           recursive: true);
-
-                                    //       // Reload the list of folder names to reflect the deletion
-                                    //       await _loadFolderNames();
-                                    //     }
-
-                                    //     // Update the state to remove the folder name from the UI
-                                    //     setState(() {});
-                                    //   }
+                                  if (value == 'customize') {
+                                    // Show a dialog with a list of available assets
+                                    final asset2 = await showDialog<String>(
+                                      context: context,
+                                      builder: (context) =>
+                                          const AssetSelectionDialog2(),
+                                    );
+                                    // Update on user's selection
+                                    if (asset2 != null) {
+                                      setState(() {
+                                        folderAsset2 = asset2;
+                                      });
+                                      // Save the selected
+                                      final prefs =
+                                          await SharedPreferences.getInstance();
+                                      prefs.setString(
+                                          'folderAsset2', folderAsset2);
+                                    }
                                   }
                                 },
                               ),

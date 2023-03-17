@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ggits/dialoguebox.dart';
 import 'package:ggits/drawer.dart';
+import 'package:ggits/newAsset1.dart';
 import 'package:ggits/recents.dart';
 
 import 'package:ggits/subfolder_screen.dart';
@@ -35,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen>
   //used for drawer
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   User? _user;
+  // Initial asset
+  String folderAsset = 'assets/images/folder6.gif';
 
   @override
   void initState() {
@@ -49,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       bool dialogShown = prefs.getBool('dialogShown') ??
-          false; //c hecking if the user logged in previousely
+          false; //checking if the user logged in previousely
       if (!dialogShown) {
         // ignore: use_build_context_synchronously
         _showWelcomeDialog(context);
@@ -60,6 +63,15 @@ class _HomeScreenState extends State<HomeScreen>
       if (mounted) {
         setState(() {
           _user = user;
+        });
+      }
+    });
+
+    SharedPreferences.getInstance().then((prefs) {
+      final asset = prefs.getString('folderAsset');
+      if (asset != null) {
+        setState(() {
+          folderAsset = asset;
         });
       }
     });
@@ -341,7 +353,7 @@ class _HomeScreenState extends State<HomeScreen>
                                           width: size.width / 3,
                                           height: size.height / 7,
                                           child: Image.asset(
-                                            'assets/images/folder6.gif',
+                                            folderAsset,
                                             fit: BoxFit.contain,
                                           ),
                                         ),
@@ -372,77 +384,39 @@ class _HomeScreenState extends State<HomeScreen>
                                         ),
 
                                         // ---------------------------------Popup menu--------------------------------
+
                                         PopupMenuButton(
-                                          itemBuilder: (_) => const [
+                                          itemBuilder: (_) => [
                                             PopupMenuItem(
-                                              value: 'color',
+                                              value: 'customize',
                                               child: Text('Customize'),
                                             ),
                                             PopupMenuItem(
-                                              value: 'delete',
+                                              value: 'favorites',
                                               child: Text('Favorites'),
                                             ),
                                           ],
                                           onSelected: (value) async {
-                                            if (value == 'color') {
-                                              // Edit folder
-                                            } else if (value == 'favorites') {
-                                              //confirmation dialog
-                                              // bool confirmed = await showDialog(
-                                              //   context: context,
-                                              //   builder: (context) {
-                                              //     return AlertDialog(
-                                              //       title: const Text(
-                                              //           'Confirm Delete'),
-                                              //       content: const Text(
-                                              //           'Are you sure you want to delete this folder?'),
-                                              //       actions: [
-                                              //         TextButton(
-                                              //           onPressed: () {
-                                              //             Navigator.pop(context,
-                                              //                 false); // Return false to indicate cancellation
-                                              //           },
-                                              //           child: const Text('Cancel'),
-                                              //         ),
-                                              //         TextButton(
-                                              //           onPressed: () {
-                                              //             Navigator.pop(context,
-                                              //                 true); // Return true to indicate confirmation
-                                              //           },
-                                              //           child: const Text('Delete'),
-                                              //         ),
-                                              //       ],
-                                              //     );
-                                              //   },
-                                              // );
-
-                                              // if (confirmed) {
-                                              //   // Remove the folder name from the list of folder names
-                                              //   final String folderName =
-                                              //       folderNames.removeAt(index);
-
-                                              //   // Get the app documents directory
-                                              //   final Directory appDir =
-                                              //       await getApplicationDocumentsDirectory();
-
-                                              //   // Create a File object for the folder to delete
-                                              //   final Directory folderToDelete =
-                                              //       Directory(
-                                              //           '${appDir.path}/$folderName');
-
-                                              //   // Check if the folder exists before deleting it
-                                              //   if (await folderToDelete.exists()) {
-                                              //     // Delete the folder and all its contents recursively
-                                              //     await folderToDelete.delete(
-                                              //         recursive: true);
-
-                                              //     // Clear the list of folder names
-                                              //     folderNames.clear();
-
-                                              //     // Reload the list of folder names to reflect the deletion
-                                              //     await _loadFolderNames();
-                                              //   }
-                                              // }
+                                            if (value == 'customize') {
+                                              // Show a dialog with a list of available assets
+                                              final asset =
+                                                  await showDialog<String>(
+                                                context: context,
+                                                builder: (context) =>
+                                                    const AssetSelectionDialog(),
+                                              );
+                                              // Update on user's selection
+                                              if (asset != null) {
+                                                setState(() {
+                                                  folderAsset = asset;
+                                                });
+                                                // Save the selected
+                                                final prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+                                                prefs.setString(
+                                                    'folderAsset', folderAsset);
+                                              }
                                             }
                                           },
                                         ),

@@ -23,7 +23,7 @@ class _FAQScreenState extends State<FAQScreen> {
   ];
 
   final List<String> _answers = [
-    'On Home Page you can find your Branch/Semester folder by scrolling the screen or by searching your Branch/Semester on the Search Bar. After opening you Branch folder you can easily seletc the subject notes you wanna access and tap on it. And there you go!',
+    'On Home Page you can find your Branch/Semester folder by scrolling the screen or by searching your Branch/Semester on the Search Bar. After opening you Branch folder you can easily select the subject notes you wanna access and tap on it. And there you go!',
     "These notes are written by your semester peers and are published by them on the application.",
     "Yes, the notes are complete and containes everything which was taught in class",
     "Great Initiative, You can easily request to become an admin by opening the menu from home page, click the Request for Admin option in the Menu, fill out the google form and then just wait for our reply!",
