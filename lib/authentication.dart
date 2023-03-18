@@ -21,7 +21,7 @@ class _SignInScreenState extends State<SignInScreen>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
-  bool _isAdminLoading = false;
+
   String? _errorMessage;
 
   @override
@@ -131,7 +131,7 @@ class _SignInScreenState extends State<SignInScreen>
                           autofocus: false,
                           decoration: const InputDecoration(
                               labelText: 'Email',
-                              hintText: "Only Admins can Sign in"),
+                              hintText: "Not an Admin? SignIn using Google!"),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -285,11 +285,11 @@ class _SignInScreenState extends State<SignInScreen>
                                   await _googleSignIn.signIn();
 
                               if (googleUser != null) {
-                                // Get the authentication credentials for the signed-in user
+                                // authentication credentials for the signed-in user
                                 final GoogleSignInAuthentication googleAuth =
                                     await googleUser.authentication;
 
-                                // Use the credentials to sign in with Firebase
+                                // Use and Sign in with Firebase
                                 final AuthCredential credential =
                                     GoogleAuthProvider.credential(
                                   accessToken: googleAuth.accessToken,
@@ -298,14 +298,13 @@ class _SignInScreenState extends State<SignInScreen>
                                 await FirebaseAuth.instance
                                     .signInWithCredential(credential);
 
-                                // Get the user's data
+                                // fetching user data
                                 final User user =
                                     FirebaseAuth.instance.currentUser!;
                                 final userData = {
                                   'name': user.displayName,
                                   'email': user.email,
                                   'photoUrl': user.photoURL,
-                                  // Add any additional data you want to store
                                 };
 
                                 // Storing the user's data in Firestore
@@ -334,7 +333,7 @@ class _SignInScreenState extends State<SignInScreen>
                             }
                           },
                           child: Text(
-                            "User Sign In with Google",
+                            "Sign In with Google",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,

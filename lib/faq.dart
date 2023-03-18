@@ -13,22 +13,24 @@ class FAQScreen extends StatefulWidget {
 class _FAQScreenState extends State<FAQScreen> {
   final List<String> _questions = [
     "Where I can find the notes?",
-    "Who has written these Notes?",
-    "Are the notes Complete according to what was taught in Class?",
+    "Who has written these notes?",
+    "Are the notes complete according to what was taught in class?",
     "How can I Upload my Notes?",
+    "I want to become an Admin. What will I need to do?",
     "What else we will get here other than notes?",
-    "Notes are also available on Moodle, No?",
+    "Notes are also available on Moo___, No?",
     "Is this application available offline?",
     "Will we recieve any credits for uploading our notes?"
   ];
 
   final List<String> _answers = [
-    'On Home Page you can find your Branch/Semester folder by scrolling the screen or by searching your Branch/Semester on the Search Bar. After opening you Branch folder you can easily select the subject notes you wanna access and tap on it. And there you go!',
+    'On HomePage you can find your Branch/Semester folder by scrolling the screen or by searching your Branch/Semester on the Search Bar. After opening you Branch folder you can easily select the subject notes you wanna access and tap on it. And there you go!',
     "These notes are written by your semester peers and are published by them on the application.",
-    "Yes, the notes are complete and containes everything which was taught in class",
-    "Great Initiative, You can easily request to become an admin by opening the menu from home page, click the Request for Admin option in the Menu, fill out the google form and then just wait for our reply!",
+    "While we cannot provide a guarantee that the notes are comprehensive, we assure you that you will have access to all the necessary materials to effectively prepare for your exam.",
+    "Great Initiative, You can easily request to upload your notes without becoming an admin by yourself. Just navigate to the menu, tap on 'Request to Upload', and there you go fill out the google form. After the verification process notes will be published",
+    "You can easily request to be come an Admin and get the power to manage the publication by becoming an Admin, you just need to tap on another option on the menu, fill the Google form and wait for next 24 hours, we will contact you! 🤝",
     "We will try to provide all the necessary resources which is required for you guys, so that you all don't have to switch to multiple applications to find study material.",
-    "Yes, its totally your wish which platform you want to prefer, here you will find several modes and options in the reader available to comfortably prepare for your exams which you won't get on Moodle and other platforms and Most importantly you won't find Notes by your own batch mates on Moodle with all the important Study material!",
+    "Yes, its totally your wish which platform you want to prefer, here you will find several modes and options in the reader available to comfortably prepare for your exams which you won't get on Moo___ and other platforms and Most importantly you won't find Notes by your own batch mates on Moo___ with all the important Study material!",
     "Not yet, But looking forward to it in later versions. There is much more to come so stay tuned! 💙",
     "Yes obviously, We will be implementing that feature soon in future updates!",
   ];

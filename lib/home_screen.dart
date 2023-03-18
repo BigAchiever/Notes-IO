@@ -244,6 +244,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                     prefixIcon: IconButton(
+                      splashColor: Colors.transparent,
                       icon: const Icon(
                         Icons.menu_rounded,
                         color: Colors.red,
@@ -387,16 +388,18 @@ class _HomeScreenState extends State<HomeScreen>
 
                                         PopupMenuButton(
                                           itemBuilder: (_) => [
-                                            PopupMenuItem(
+                                            const PopupMenuItem(
                                               value: 'customize',
                                               child: Text('Customize'),
                                             ),
-                                            PopupMenuItem(
+                                            const PopupMenuItem(
                                               value: 'favorites',
                                               child: Text('Favorites'),
                                             ),
                                           ],
                                           onSelected: (value) async {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
                                             if (value == 'customize') {
                                               // Show a dialog with a list of available assets
                                               final asset =

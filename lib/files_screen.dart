@@ -26,11 +26,13 @@ class FileScreen extends StatefulWidget {
 class _FileScreenState extends State<FileScreen> {
   List<String> _fileNames = [];
   bool _isUploading = false;
+
   User? _user;
   @override
   void initState() {
     super.initState();
     _loadFiles('');
+
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       setState(() {
         _user = user;
@@ -109,34 +111,80 @@ class _FileScreenState extends State<FileScreen> {
     );
   }
 
-  Future<void> _downloadFile(String fileName) async {
+  Future<void> _downloadFile(String fileName,
+      {required Directory directory}) async {
     Reference ref = FirebaseStorage.instance
         .ref()
         .child(widget.parentFolderName)
         .child(widget.folderName)
         .child(fileName);
 
-    Directory? directory = await getExternalStorageDirectory();
-    String filePath = '${directory?.path}/$fileName';
+    String filePath = '${directory.path}/$fileName';
 
     File localFile = File(filePath);
     bool exists = await localFile.exists();
     if (exists) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('File already exists in local storage.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: Colors.lightBlue,
+          content: Text(
+            'Document is already Saved Offline',
+            style: TextStyle(fontWeight: FontWeight.w400),
+          ),
+        ),
+      );
       return;
     }
 
     try {
-      Uint8List? data = await ref.getData();
-      await localFile.writeAsBytes(data!);
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('File downloaded to local storage.')));
+      final DownloadTask task = ref.writeToFile(localFile);
+      task.snapshotEvents.listen((TaskSnapshot snapshot) {
+        if (snapshot.state == TaskState.success) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.lightBlue,
+              content: Text(
+                'Now you can access the document offline',
+                style: TextStyle(fontWeight: FontWeight.w400),
+              ),
+            ),
+          );
+        }
+      });
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
     }
+  }
+
+  void _showStorageOptions(String fileName) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.file_download),
+              title: const Text('Access offline'),
+              onTap: () async {
+                Navigator.pop(context);
+
+                // Making it available offine
+                Directory? directory = await getApplicationDocumentsDirectory();
+                _downloadFile(fileName, directory: directory);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share),
+              title: const Text('Share the App'),
+              onTap: () async {},
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -195,33 +243,9 @@ class _FileScreenState extends State<FileScreen> {
                       final String fileName = _fileNames[index];
                       return GestureDetector(
                         onTap: () => _openFile(fileName),
-                        onLongPress: () => showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: const Text('Download File?'),
-                            content: const Text(
-                                'Do you want to download the file to local storage?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  _downloadFile(fileName);
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Download'),
-                              ),
-                              if (_isUploading) // kam kyu nahi karha bhai tu
-                                const Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.lightBlue,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
+                        onLongPress: () {
+                          _showStorageOptions(fileName);
+                        },
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -233,6 +257,7 @@ class _FileScreenState extends State<FileScreen> {
                             children: [
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
                                     height: size.height / 9,
@@ -343,37 +368,42 @@ class _FileScreenState extends State<FileScreen> {
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Container(
-                                    height:
-                                        MediaQuery.of(context).size.height / 14,
-                                    width:
-                                        MediaQuery.of(context).size.width / 8,
-                                    decoration: BoxDecoration(
-                                      color: Colors.transparent,
-                                      borderRadius: BorderRadius.circular(100),
-                                      border: Border.all(
-                                        color: Colors.white70,
-                                        width: 0.4,
-                                      ),
-                                    ),
-                                    child: Column(
-                                      children: const [
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 16.0),
-                                          child: Icon(
-                                            Icons.camera_alt_outlined,
-                                            color: Colors.white70,
-                                            size: 24,
-                                          ),
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              14,
+                                      width:
+                                          MediaQuery.of(context).size.width / 8,
+                                      decoration: BoxDecoration(
+                                        color: Colors.transparent,
+                                        borderRadius:
+                                            BorderRadius.circular(100),
+                                        border: Border.all(
+                                          color: Colors.white70,
+                                          width: 0.4,
                                         ),
-                                      ],
+                                      ),
+                                      child: Column(
+                                        children: const [
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 16.0),
+                                            child: Icon(
+                                              Icons.folder_copy_outlined,
+                                              color: Colors.white70,
+                                              size: 24,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
                                     height: size.height / 80,
                                   ),
                                   const Text(
-                                    "Scan",
+                                    "Folder",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                       color: Colors.white70,

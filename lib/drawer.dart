@@ -6,7 +6,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:ggits/faq.dart';
-import 'package:ggits/home_screen.dart';
+import 'package:ggits/recents.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:ggits/authentication.dart';
@@ -42,223 +42,222 @@ class _CustomDrawerState extends State<CustomDrawer> {
         ),
         SizedBox(
           width: size.width / 1.4,
-          child: Drawer(
-            backgroundColor: Colors.black87,
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 16.0),
-                        child: Animate(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/images/n.png',
-                                height: size.height / 10,
-                                width: size.width / 8,
-                              )
-                                  .animate(
-                                      onPlay: (controller) =>
-                                          controller.repeat())
-                                  .shimmer(
-                                      delay: 4000.ms,
-                                      duration: 1800.ms) // shimmer +
-                                  .shake(
-                                      hz: 4,
-                                      curve: Curves.easeInOutCubic), // shake +
+          child: Builder(
+            builder: (BuildContext context) {
+              return Drawer(
+                backgroundColor: Colors.black87,
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Animate(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/n.png',
+                                    height: size.height / 10,
+                                    width: size.width / 8,
+                                  )
+                                      .animate(
+                                          onPlay: (controller) =>
+                                              controller.repeat())
+                                      .shimmer(
+                                          delay: 4000.ms,
+                                          duration: 1800.ms) // shimmer +
+                                      .shake(
+                                          hz: 4,
+                                          curve:
+                                              Curves.easeInOutCubic), // shake +
 
-                              SizedBox(width: size.width / 24),
-                              const Text(
-                                'Notes.io',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
+                                  SizedBox(width: size.width / 24),
+                                  const Text(
+                                    'Notes.io',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                      const Text(
-                        'Your Ultimate Notes-Hub',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: size.height / 100),
-                Expanded(
-                  child: ListView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: EdgeInsets.zero,
-                    children: [
-                      Animate(
-                        child: ListTile(
-                          leading: const Icon(Icons.home, color: Colors.white)
-                              .animate()
-                              .flipH(delay: 300.ms, duration: 600.ms),
-                          title: const Text('Home',
-                              style: TextStyle(color: Colors.white)),
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                      Animate(
-                        child: ListTile(
-                          leading:
-                              const Icon(Icons.favorite, color: Colors.white)
-                                  .animate()
-                                  .flipH(delay: 300.ms, duration: 600.ms),
-                          title: const Text('Favorite',
-                              style: TextStyle(color: Colors.white)),
-                          onTap: () {},
-                        ),
-                      ),
-                      Animate(
-                        child: ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/images/fire.svg',
-                            height: 24,
-                            // ignore: deprecated_member_use
-                            color: Colors.white,
-                          ).animate().flipH(delay: 300.ms, duration: 600.ms),
-                          title: const Text(
-                            'Contributions',
-                            style: TextStyle(color: Colors.white),
+                          const Text(
+                            'Your Ultimate Notes-Hub',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
                           ),
-                          onTap: () {},
-                        ),
+                        ],
                       ),
-                      Animate(
-                        child: ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/images/contact.svg',
-                            height: 24,
-                            color: Colors.white,
-                          ).animate().flipH(delay: 300.ms, duration: 600.ms),
-                          title: const Text('Contact',
-                              style: TextStyle(color: Colors.white)),
-                          onTap: () async {
-                            String email =
-                                Uri.encodeComponent("danishali9575@gmail.com");
-                            String subject = Uri.encodeComponent(
-                                "I wanted to give/ask you a suggestion/Question");
-                            String body = Uri.encodeComponent("Hello there!");
-                            if (kDebugMode) {
-                              print(subject);
-                            }
-                            Uri mail = Uri.parse(
-                                "mailto:$email?subject=$subject&body=$body");
-                            if (await launchUrl(mail)) {
-                              //email app opened
-                            } else {
-                              //email app is not opened
-                              const Text("Error Occured!");
-                            }
-                          },
-                        ),
-                      ),
-                      Animate(
-                        child: ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/images/info.svg',
-                            height: 24,
-                            // ignore: deprecated_member_use
-                            color: Colors.white,
-                          ).animate().flipH(delay: 300.ms, duration: 600.ms),
-                          title: const Text('FAQ',
-                              style: TextStyle(color: Colors.white)),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const FAQScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      Animate(
-                        child: ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/images/admin.svg',
-                            height: 24,
-                            color: Colors.white,
-                          ).animate().flipH(delay: 300.ms, duration: 600.ms),
-                          title: const Text(
-                            'Request for Admin',
-                            style: TextStyle(color: Colors.white),
+                    ),
+                    SizedBox(height: size.height / 100),
+                    Expanded(
+                      child: ListView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.home, color: Colors.white)
+                                .animate(delay: 400.milliseconds)
+                                .flipH(),
+                            title: const Text('Home',
+                                style: TextStyle(color: Colors.white)),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
                           ),
-                          onTap: () async {
-                            const url =
-                                'https://docs.google.com/forms/d/e/1FAIpQLSdBEFT5v-7922qYeG8s40GkTp9WY-FASA_MWFH8zo2mcGFAlQ/viewform?usp=sf_link';
-                            await launch(url);
-                          },
-                        ),
-                      ),
-                      Container(
-                        height: size.height / 4.5,
-                      ),
-                      Animate(
-                        child: ListTile(
-                          leading: SvgPicture.asset(
-                            'assets/images/logout.svg',
-                            height: 24,
-                            color: Colors.white,
-                          ).animate().flipH(delay: 300.ms, duration: 600.ms),
-                          title: const Text('Logout',
-                              style: TextStyle(color: Colors.white)),
-                          onTap: () async {
-                            try {
-                              // sign out from Firebase authentication
-                              await FirebaseAuth.instance.signOut();
-
-                              // sign out from Google
-                              await _googleSignIn.signOut();
-
-                              // add a delay before navigating to the login screen
-                              await Future.delayed(
-                                  const Duration(milliseconds: 500));
-
-                              // navigate to login page
-                              Navigator.pushReplacement(
+                          ListTile(
+                            leading: SvgPicture.asset(
+                              'assets/images/fire.svg',
+                              height: 24,
+                              // ignore: deprecated_member_use
+                              color: Colors.white,
+                            ).animate(delay: 400.milliseconds).flipH(),
+                            title: const Text(
+                              'Contributions',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onTap: () {},
+                          ),
+                          ListTile(
+                            leading: SvgPicture.asset(
+                              'assets/images/contact.svg',
+                              height: 24,
+                              color: Colors.white,
+                            ).animate(delay: 400.milliseconds).flipH(),
+                            title: const Text('Contact',
+                                style: TextStyle(color: Colors.white)),
+                            onTap: () async {
+                              String email = Uri.encodeComponent(
+                                  "danishali9575@gmail.com");
+                              String subject = Uri.encodeComponent(
+                                  "I wanted to give/ask you a suggestion/Question");
+                              String body = Uri.encodeComponent("Hello there!");
+                              if (kDebugMode) {
+                                print(subject);
+                              }
+                              Uri mail = Uri.parse(
+                                  "mailto:$email?subject=$subject&body=$body");
+                              if (await launchUrl(mail)) {
+                                //email app opened
+                              } else {
+                                //email app is not opened
+                                const Text("Error Occured!");
+                              }
+                            },
+                          ),
+                          ListTile(
+                            leading: SvgPicture.asset(
+                              'assets/images/info.svg',
+                              height: 24,
+                              // ignore: deprecated_member_use
+                              color: Colors.white,
+                            ).animate(delay: 400.milliseconds).flipH(),
+                            title: const Text('FAQ',
+                                style: TextStyle(color: Colors.white)),
+                            onTap: () {
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SignInScreen()),
+                                  builder: (context) => const FAQScreen(),
+                                ),
                               );
+                            },
+                          ),
+                          ListTile(
+                            leading: SvgPicture.asset(
+                              'assets/images/admin.svg',
+                              height: 24,
+                              color: Colors.white,
+                            ).animate(delay: 400.milliseconds).flipH(),
+                            title: const Text(
+                              'Request for Admin',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onTap: () async {
+                              const url =
+                                  'https://docs.google.com/forms/d/e/1FAIpQLSdBEFT5v-7922qYeG8s40GkTp9WY-FASA_MWFH8zo2mcGFAlQ/viewform?usp=sf_link';
+                              await launch(url);
+                            },
+                          ),
+                          ListTile(
+                            leading: SvgPicture.asset(
+                              'assets/images/upload.svg',
+                              height: 24,
+                              color: Colors.white,
+                            ).animate(delay: 400.milliseconds).flipH(),
+                            title: const Text(
+                              'Request To Upload',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onTap: () async {
+                              const url =
+                                  'https://docs.google.com/forms/d/e/1FAIpQLSeQDB8mJzl5STr_QTOfpZVPNx-jEIAR9MtWrR4GMP-9LGO6Gw/viewform?usp=sf_link';
+                              await launch(url);
+                            },
+                          ),
+                          Container(
+                            height: size.height / 4.5,
+                          ),
+                          ListTile(
+                            leading: SvgPicture.asset(
+                              'assets/images/logout.svg',
+                              height: 24,
+                              color: Colors.white,
+                            ).animate().flipH(delay: 400.milliseconds),
+                            title: const Text('Logout',
+                                style: TextStyle(color: Colors.white)),
+                            onTap: () async {
+                              try {
+                                // sign out from Firebase authentication
+                                await FirebaseAuth.instance.signOut();
 
-                              // Hide the loading indicator
-                            } catch (e) {
-                              if (kDebugMode) {
-                                print(e.toString());
+                                // sign out from Google
+                                await _googleSignIn.signOut();
+
+                                // add a delay before navigating to the login screen
+                                await Future.delayed(
+                                    const Duration(milliseconds: 900));
+
+                                // navigate to login page
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SignInScreen()),
+                                );
+
+                                // Hide the loading indicator
+                              } catch (e) {
+                                if (kDebugMode) {
+                                  print(e.toString());
+                                }
                               }
-                            }
-                          },
-                        ),
+                            },
+                          ),
+                          SizedBox(height: size.height / 22),
+                          Container(
+                              alignment: Alignment.center,
+                              child: const Text(
+                                'Made with 💙',
+                                style: TextStyle(
+                                    color: Colors.cyanAccent, fontSize: 16),
+                              )),
+                        ],
                       ),
-                      SizedBox(height: size.height / 22),
-                      Container(
-                          alignment: Alignment.center,
-                          child: const Text(
-                            'Made with 💙',
-                            style: TextStyle(
-                                color: Colors.cyanAccent, fontSize: 16),
-                          )),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ),
       ],
