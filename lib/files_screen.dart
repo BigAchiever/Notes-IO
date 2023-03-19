@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -135,15 +136,12 @@ class _FileScreenState extends State<FileScreen> {
     File localFile = File(filePath);
     bool exists = await localFile.exists();
     if (exists) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Color.fromARGB(124, 3, 168, 244),
-          content: Text(
-            'Document is already Saved Offline',
-            style: TextStyle(fontWeight: FontWeight.w400),
-          ),
-        ),
-      );
+      Fluttertoast.showToast(
+          msg: 'Document is already Saved Offline in the App',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Color.fromARGB(143, 3, 168, 244),
+          textColor: Colors.white);
       return;
     }
 
@@ -151,15 +149,12 @@ class _FileScreenState extends State<FileScreen> {
       final DownloadTask task = ref.writeToFile(localFile);
       task.snapshotEvents.listen((TaskSnapshot snapshot) {
         if (snapshot.state == TaskState.success) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Color.fromARGB(89, 3, 168, 244),
-              content: Text(
-                'Now you can access the document offline',
-                style: TextStyle(fontWeight: FontWeight.w400),
-              ),
-            ),
-          );
+          Fluttertoast.showToast(
+              msg: 'Now you can access the document offline in the Application',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Color.fromRGBO(9, 166, 239, 0.543),
+              textColor: Colors.white);
         }
       });
     } catch (e) {
