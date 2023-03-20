@@ -140,7 +140,7 @@ class _FileScreenState extends State<FileScreen> {
           msg: 'Document is already Saved Offline in the App',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-          backgroundColor: Color.fromARGB(143, 3, 168, 244),
+          backgroundColor: const Color.fromARGB(143, 3, 168, 244),
           textColor: Colors.white);
       return;
     }
@@ -153,7 +153,7 @@ class _FileScreenState extends State<FileScreen> {
               msg: 'Now you can access the document offline in the Application',
               toastLength: Toast.LENGTH_SHORT,
               gravity: ToastGravity.BOTTOM,
-              backgroundColor: Color.fromRGBO(9, 166, 239, 0.543),
+              backgroundColor: const Color.fromRGBO(9, 166, 239, 0.543),
               textColor: Colors.white);
         }
       });
@@ -167,27 +167,61 @@ class _FileScreenState extends State<FileScreen> {
   void _showStorageOptions(String fileName) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (BuildContext context) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ListTile(
-              leading: const Icon(Icons.file_download),
-              title: const Text('Access offline'),
-              onTap: () async {
-                Navigator.pop(context);
-
-                // Making it available offine
-                Directory? directory = await getApplicationDocumentsDirectory();
-                _downloadFile(fileName, directory: directory);
-              },
+        return AnimatedPadding(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+            left: 10,
+            right: 10,
+            top: 10,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.black45,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
             ),
-            ListTile(
-              leading: const Icon(Icons.share),
-              title: const Text('Share the App'),
-              onTap: () async {},
-            )
-          ],
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.file_download),
+                  title: const Text('Access offline'),
+                  onTap: () async {
+                    Navigator.pop(context);
+
+                    // Making it available offline
+                    Directory? directory =
+                        await getApplicationDocumentsDirectory();
+                    _downloadFile(fileName, directory: directory);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.share),
+                  title: const Text('Share the App'),
+                  onTap: () async {},
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'CANCEL',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
