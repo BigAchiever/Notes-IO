@@ -23,7 +23,7 @@ class _FolderScreenState extends State<FolderScreen> {
   late List<String> folderNames;
   String folderAsset2 = 'assets/images/folder6.gif';
   User? _user;
-  
+
   @override
   void initState() {
     super.initState();
@@ -161,7 +161,7 @@ class _FolderScreenState extends State<FolderScreen> {
         body: folderNames.isEmpty
             ? Center(
                 child: FutureBuilder<void>(
-                  future: Future.delayed(const Duration(seconds: 2)),
+                  future: Future.delayed(const Duration(seconds: 3)),
                   builder:
                       (BuildContext context, AsyncSnapshot<void> snapshot) {
                     if (snapshot.connectionState == ConnectionState.done &&
