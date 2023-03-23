@@ -61,53 +61,55 @@ class _CustomDialogState extends State<CustomDialog>
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      widget.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: size.height / 26),
-                    Text(
-                      widget.message,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.blueGrey[190],
-                        fontSize: 18,
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height / 20,
-                    ),
-                    Center(
-                      child: TextButton(
-                        onPressed: widget.onPressed,
-                        child: Text(
-                          'Understood!',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            shadows: [
-                              Shadow(
-                                offset: const Offset(3, 4),
-                                blurRadius: 0,
-                                color: Colors.black.withOpacity(0.5),
-                              ),
-                            ],
-                          ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.title,
+                        style: TextStyle(
+                          color: Colors.lightBlue.shade100,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )
-                          .animate()
-                          .scaleXY(duration: 3500.milliseconds)
-                          .fadeIn(duration: 3000.milliseconds),
-                    ),
-                  ],
+                      ),
+                      SizedBox(height: size.height / 26),
+                      Text(
+                        widget.message,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.blueGrey[190],
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height / 30,
+                      ),
+                      Center(
+                        child: TextButton(
+                          onPressed: widget.onPressed,
+                          child: Text(
+                            'Understood!',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 20,
+                              shadows: [
+                                Shadow(
+                                  offset: const Offset(2, 3),
+                                  blurRadius: 0,
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                            .animate()
+                            .scaleXY(duration: 3500.milliseconds)
+                            .fadeIn(duration: 3000.milliseconds),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
