@@ -216,7 +216,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             ),
                             onTap: () async {
                               const url =
-                                  'https://docs.google.com/forms/d/e/1FAIpQLSeQDB8mJzl5STr_QTOfpZVPNx-jEIAR9MtWrR4GMP-9LGO6Gw/viewform?usp=sf_link';
+                                  'https://drive.google.com/drive/folders/1iKPxfBRycO7Pl_gjBjmOCSbdr7qhJNSZ?usp=share_link';
                               await launch(url);
                             },
                           ),
