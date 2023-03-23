@@ -291,6 +291,7 @@ class _FolderScreenState extends State<FolderScreen> {
             : Transform.translate(
                 offset: const Offset(0, -20),
                 child: FloatingActionButton(
+                  heroTag: "Subfolder screen button",
                   onPressed: () {
                     showModalBottomSheet(
                       elevation: 3,

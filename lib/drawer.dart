@@ -178,7 +178,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               color: Colors.white,
                             ).animate(delay: 400.milliseconds).flipH(),
                             title: const Text(
-                              'Request for Admin',
+                              'Request for admin',
                               style: TextStyle(color: Colors.white),
                             ),
                             onTap: () async {
@@ -194,7 +194,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                               color: Colors.white,
                             ).animate(delay: 400.milliseconds).flipH(),
                             title: const Text(
-                              'Request To Upload',
+                              'Request To upload',
                               style: TextStyle(color: Colors.white),
                             ),
                             onTap: () async {
@@ -204,7 +204,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
                             },
                           ),
                           Container(
-                            height: size.height / 4.5,
+                            height: size.height / 5.5,
+                          ),
+                          ListTile(
+                            leading: const Icon(Icons.update)
+                                .animate(delay: 400.milliseconds)
+                                .flipH(),
+                            title: const Text(
+                              'Check for updates',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            onTap: () async {
+                              const url =
+                                  'https://docs.google.com/forms/d/e/1FAIpQLSeQDB8mJzl5STr_QTOfpZVPNx-jEIAR9MtWrR4GMP-9LGO6Gw/viewform?usp=sf_link';
+                              await launch(url);
+                            },
                           ),
                           ListTile(
                             leading: SvgPicture.asset(

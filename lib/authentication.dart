@@ -127,11 +127,14 @@ class _SignInScreenState extends State<SignInScreen>
                             ),
                           ),
                         TextFormField(
+                          style: TextStyle(color: Colors.white),
                           controller: _emailController,
                           autofocus: false,
                           decoration: const InputDecoration(
                               labelText: 'Email',
-                              hintText: "Not an Admin? SignIn using Google!"),
+                              labelStyle: TextStyle(color: Colors.teal),
+                              hintText: "Not an Admin? SignIn using Google!",
+                              hintStyle: TextStyle(color: Colors.white70)),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -142,11 +145,14 @@ class _SignInScreenState extends State<SignInScreen>
                         ),
                         SizedBox(height: size.height / 56),
                         TextFormField(
+                          style: TextStyle(color: Colors.white),
                           autofocus: false,
                           controller: _passwordController,
                           decoration: const InputDecoration(
                               labelText: "Password",
-                              hintText: "Enter your Authenticated Password"),
+                              labelStyle: TextStyle(color: Colors.teal),
+                              hintText: "Enter your Authenticated Password",
+                              hintStyle: TextStyle(color: Colors.white70)),
                           obscureText: true,
                           validator: (value) {
                             if (value!.isEmpty) {

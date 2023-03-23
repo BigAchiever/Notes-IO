@@ -356,6 +356,7 @@ class _FileScreenState extends State<FileScreen> {
               : Transform.translate(
                   offset: const Offset(0, -20),
                   child: FloatingActionButton(
+                    heroTag: "File screen button",
                     onPressed: () {
                       showModalBottomSheet(
                         elevation: 3,

@@ -54,7 +54,7 @@ class _CustomDialogState extends State<CustomDialog>
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.lightBlue.withOpacity(0.7),
+                      Colors.redAccent,
                     ],
                   ),
                 ),
@@ -69,7 +69,7 @@ class _CustomDialogState extends State<CustomDialog>
                       Text(
                         widget.title,
                         style: TextStyle(
-                          color: Colors.lightBlue.shade100,
+                          color: Colors.white54,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -79,7 +79,7 @@ class _CustomDialogState extends State<CustomDialog>
                         widget.message,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.blueGrey[190],
+                          color: Colors.white70,
                           fontSize: 18,
                         ),
                       ),
@@ -92,11 +92,11 @@ class _CustomDialogState extends State<CustomDialog>
                           child: Text(
                             'Understood!',
                             style: TextStyle(
-                              color: Colors.green,
+                              color: Colors.white,
                               fontSize: 20,
                               shadows: [
                                 Shadow(
-                                  offset: const Offset(2, 3),
+                                  offset: const Offset(2, 2),
                                   blurRadius: 0,
                                   color: Colors.black.withOpacity(0.5),
                                 ),
@@ -104,9 +104,9 @@ class _CustomDialogState extends State<CustomDialog>
                             ),
                           ),
                         )
-                            .animate()
-                            .scaleXY(duration: 3500.milliseconds)
-                            .fadeIn(duration: 3000.milliseconds),
+                            .animate(
+                                onPlay: (controller) => controller.repeat())
+                            .shakeX(delay: 2000.milliseconds),
                       ),
                     ],
                   ),
