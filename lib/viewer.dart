@@ -57,6 +57,7 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
           HttpClientRequest request =
               await httpClient.getUrl(Uri.parse(await FirebaseStorage.instance
                   .ref()
+                  //.child("${widget.parentFolderName}/${widget.folderName}/${widget.fileName}") // TO TRY
                   .child(widget.parentFolderName) // Outside Folder
                   .child(widget.folderName) // Inside Folder
                   .child(widget.fileName) // File name
