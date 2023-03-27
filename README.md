@@ -1,16 +1,11 @@
-# notes_io
+# Notes-Io
 
-A new Flutter project.
+⁕ Access to quality handwritten notes by your college mates of different branches and semesters.
 
-## Getting Started
+⁕ User-friendly interface for easy navigation and access to notes.
 
-This project is a starting point for a Flutter application.
+⁕ Integrated document viewer for easy reading and writing, with several modes, themes, layout customization, and much more!
 
-A few resources to get you started if this is your first Flutter project:
+⁕ Admin functionality for specific users to upload files and create folders and manage the resources.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+⁕ Users can find all the resources and Notes available here, so now you don't need to switch through several application to access different study material.
