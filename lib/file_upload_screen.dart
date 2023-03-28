@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:ggits/viewer.dart';
+import 'package:ggits/file_viewer.dart';
 import 'package:path/path.dart' as path;
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,6 +55,7 @@ class _FileScreenState extends State<FileScreen> {
     super.dispose();
   }
 
+  //Saving the state of the layout
   Future<void> _loadViewPreference() async {
     final prefs = await SharedPreferences.getInstance();
     final isGridView = prefs.getBool('isGridView') ?? false;
@@ -63,10 +64,12 @@ class _FileScreenState extends State<FileScreen> {
     });
   }
 
+  //Saving the state of the layout
   Future<void> _saveViewPreference(bool isGridView) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isGridView', isGridView);
   }
+
 
   Future<void> _loadFiles(String folderName) async {
     ListResult result = await FirebaseStorage.instance
@@ -180,6 +183,7 @@ class _FileScreenState extends State<FileScreen> {
     }
   }
 
+  // Storing files in the application offline
   void _showStorageOptions(String fileName) {
     showModalBottomSheet(
       context: context,
@@ -327,6 +331,9 @@ class _FileScreenState extends State<FileScreen> {
                                   mainAxisSpacing: 60),
                           itemBuilder: (BuildContext context, int index) {
                             final String fileName = _fileNames[index];
+                            final String nameWithoutExtension =
+                                path.basenameWithoutExtension(
+                                    fileName); // Display filenames without the extention
                             return GestureDetector(
                               onTap: () => _openFile(fileName),
                               onLongPress: () {
@@ -364,7 +371,7 @@ class _FileScreenState extends State<FileScreen> {
                                         child: Align(
                                           alignment: Alignment.center,
                                           child: Text(
-                                            fileName,
+                                            nameWithoutExtension,
                                             style: const TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w400),
@@ -386,6 +393,8 @@ class _FileScreenState extends State<FileScreen> {
                           itemCount: _fileNames.length,
                           itemBuilder: (BuildContext context, int index) {
                             final String fileName = _fileNames[index];
+                            final String nameWithoutExtension =
+                                path.basenameWithoutExtension(fileName);
                             return Container(
                               padding: const EdgeInsets.symmetric(vertical: 5),
                               decoration: const BoxDecoration(
@@ -398,7 +407,7 @@ class _FileScreenState extends State<FileScreen> {
                                   fit: BoxFit.contain,
                                 ),
                                 title: Text(
-                                  fileName,
+                                  nameWithoutExtension,
                                   style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400),

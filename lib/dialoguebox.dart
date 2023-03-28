@@ -49,12 +49,12 @@ class _CustomDialogState extends State<CustomDialog>
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  gradient: const LinearGradient(
+                  gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Colors.redAccent,
+                      Colors.blue.withOpacity(0.7),
                     ],
                   ),
                 ),
@@ -68,8 +68,8 @@ class _CustomDialogState extends State<CustomDialog>
                     children: [
                       Text(
                         widget.title,
-                        style: const TextStyle(
-                          color: Colors.white54,
+                        style: TextStyle(
+                          color: Colors.lightBlue.shade100,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -78,8 +78,8 @@ class _CustomDialogState extends State<CustomDialog>
                       Text(
                         widget.message,
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: Colors.blueGrey[190],
                           fontSize: 18,
                         ),
                       ),
@@ -92,11 +92,11 @@ class _CustomDialogState extends State<CustomDialog>
                           child: Text(
                             'Understood!',
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.orange.shade100,
                               fontSize: 20,
                               shadows: [
                                 Shadow(
-                                  offset: const Offset(2, 2),
+                                  offset: const Offset(2, 3),
                                   blurRadius: 0,
                                   color: Colors.black.withOpacity(0.5),
                                 ),

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ggits/no_internet.dart';
+import 'package:ggits/no_internet_state.dart';
 import 'package:ggits/authentication.dart';
 import 'package:ggits/home_screen.dart';
 import 'package:connectivity/connectivity.dart';
@@ -47,7 +47,7 @@ Future<void> main() async {
   }
 
   // Delay the routing of the home screen for 3 seconds
-  Future.delayed(const Duration(seconds: 3), () {
+  Future.delayed(const Duration(seconds: 2), () {
     runApp(MyApp(homeScreen: homeScreen));
   });
 }
