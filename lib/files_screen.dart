@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:audioplayers/audioplayers.dart';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:confetti/confetti.dart';
@@ -13,6 +12,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:ggits/viewer.dart';
 import 'package:path/path.dart' as path;
 import 'package:rive/rive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class FileScreen extends StatefulWidget {
   const FileScreen(
@@ -31,7 +31,7 @@ class _FileScreenState extends State<FileScreen> {
   List<String> _fileNames = [];
   bool _isUploading = false;
   late ConfettiController _confettiController;
-  final AudioCache _audioCache = AudioCache();
+  // final AudioCache _audioCache = AudioCache();
   bool _isAnimating = false;
 
   User? _user;
@@ -40,6 +40,7 @@ class _FileScreenState extends State<FileScreen> {
   void initState() {
     super.initState();
     _loadFiles('');
+    _loadViewPreference();
     _confettiController = ConfettiController();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       setState(() {
@@ -52,6 +53,19 @@ class _FileScreenState extends State<FileScreen> {
   void dispose() {
     _confettiController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadViewPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isGridView = prefs.getBool('isGridView') ?? false;
+    setState(() {
+      _gridView = isGridView;
+    });
+  }
+
+  Future<void> _saveViewPreference(bool isGridView) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isGridView', isGridView);
   }
 
   Future<void> _loadFiles(String folderName) async {
@@ -279,16 +293,22 @@ class _FileScreenState extends State<FileScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.black54,
-            title: Text(widget.folderName),actions: [
-              GestureDetector(onTap:()=>setState(() {
-                _gridView = !_gridView;
-              }),child: Padding(
-                padding: EdgeInsets.only(right: size.width*0.05),
-                child: Icon((_gridView)?Icons.list:Icons.grid_on),
-              )),
-          ],
+            title: Text(widget.folderName),
+            actions: [
+              GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _gridView = !_gridView;
+                    });
+                    _saveViewPreference(_gridView);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(right: size.width * 0.05),
+                    child: Icon((_gridView) ? Icons.list : Icons.grid_on),
+                  )),
+            ],
           ),
-          body: _isUploading // whenever anyone uploads any file this is called
+          body: _isUploading
               ? const Center(
                   child: CircularProgressIndicator(color: Colors.lightBlue),
                 )
@@ -439,8 +459,8 @@ class _FileScreenState extends State<FileScreen> {
                                             width: 0.4,
                                           ),
                                         ),
-                                        child: const Column(
-                                          children: [
+                                        child: Column(
+                                          children: const [
                                             Padding(
                                               padding:
                                                   EdgeInsets.only(top: 16.0),
@@ -489,8 +509,8 @@ class _FileScreenState extends State<FileScreen> {
                                             width: 0.4,
                                           ),
                                         ),
-                                        child: const Column(
-                                          children: [
+                                        child: Column(
+                                          children: const [
                                             Padding(
                                               padding:
                                                   EdgeInsets.only(top: 16.0),

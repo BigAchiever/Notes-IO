@@ -49,7 +49,7 @@ class _CustomDialogState extends State<CustomDialog>
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  gradient: LinearGradient(
+                  gradient: const LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
@@ -68,7 +68,7 @@ class _CustomDialogState extends State<CustomDialog>
                     children: [
                       Text(
                         widget.title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white54,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class _CustomDialogState extends State<CustomDialog>
                       Text(
                         widget.message,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 18,
                         ),

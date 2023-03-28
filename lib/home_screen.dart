@@ -227,7 +227,7 @@ class _HomeScreenState extends State<HomeScreen>
                 title: TextField(
                   autofocus: false,
                   decoration: InputDecoration(
-                    hintStyle: TextStyle(color: Colors.white54),
+                    hintStyle: const TextStyle(color: Colors.white54),
                     hintText: 'Search your Branch',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),

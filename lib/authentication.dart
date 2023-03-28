@@ -127,7 +127,7 @@ class _SignInScreenState extends State<SignInScreen>
                             ),
                           ),
                         TextFormField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           controller: _emailController,
                           autofocus: false,
                           decoration: const InputDecoration(
@@ -145,7 +145,7 @@ class _SignInScreenState extends State<SignInScreen>
                         ),
                         SizedBox(height: size.height / 56),
                         TextFormField(
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                           autofocus: false,
                           controller: _passwordController,
                           decoration: const InputDecoration(
