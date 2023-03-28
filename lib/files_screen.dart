@@ -27,6 +27,7 @@ class FileScreen extends StatefulWidget {
 }
 
 class _FileScreenState extends State<FileScreen> {
+  bool _gridView = true;
   List<String> _fileNames = [];
   bool _isUploading = false;
   late ConfettiController _confettiController;
@@ -34,6 +35,7 @@ class _FileScreenState extends State<FileScreen> {
   bool _isAnimating = false;
 
   User? _user;
+
   @override
   void initState() {
     super.initState();
@@ -277,7 +279,14 @@ class _FileScreenState extends State<FileScreen> {
           backgroundColor: Colors.transparent,
           appBar: AppBar(
             backgroundColor: Colors.black54,
-            title: Text(widget.folderName),
+            title: Text(widget.folderName),actions: [
+              GestureDetector(onTap:()=>setState(() {
+                _gridView = !_gridView;
+              }),child: Padding(
+                padding: EdgeInsets.only(right: size.width*0.05),
+                child: Icon((_gridView)?Icons.list:Icons.grid_on),
+              )),
+          ],
           ),
           body: _isUploading // whenever anyone uploads any file this is called
               ? const Center(
@@ -287,68 +296,103 @@ class _FileScreenState extends State<FileScreen> {
                   ? const Center(
                       child: CircularProgressIndicator(color: Colors.lightBlue),
                     )
-                  : GridView.builder(
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: _fileNames.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 1,
-                              mainAxisSpacing: 60),
-                      itemBuilder: (BuildContext context, int index) {
-                        final String fileName = _fileNames[index];
-                        return GestureDetector(
-                          onTap: () => _openFile(fileName),
-                          onLongPress: () {
-                            _showStorageOptions(fileName);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.transparent,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Row(
+                  : (_gridView)
+                      ? GridView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: _fileNames.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 1,
+                                  mainAxisSpacing: 60),
+                          itemBuilder: (BuildContext context, int index) {
+                            final String fileName = _fileNames[index];
+                            return GestureDetector(
+                              onTap: () => _openFile(fileName),
+                              onLongPress: () {
+                                _showStorageOptions(fileName);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.transparent,
+                                ),
+                                child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(
-                                      height: size.height / 9,
-                                      child: Image.asset(
-                                        'assets/images/file4.png',
-                                        fit: BoxFit.contain,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: size.height / 9,
+                                          child: Image.asset(
+                                            'assets/images/file4.png',
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: size.height / 60),
+                                    Flexible(
+                                      flex: 1,
+                                      child: SizedBox(
+                                        width: size.width / 4,
+                                        child: Align(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            fileName,
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w400),
+                                            maxLines: 3,
+                                            overflow: TextOverflow.visible,
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: size.height / 60),
-                                Flexible(
-                                  flex: 1,
-                                  child: SizedBox(
-                                    width: size.width / 4,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        fileName,
-                                        style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400),
-                                        maxLines: 3,
-                                        overflow: TextOverflow.visible,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
+                              ),
+                            );
+                          },
+                        )
+                      : ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: _fileNames.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final String fileName = _fileNames[index];
+                            return Container(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              decoration: const BoxDecoration(
+                                  border: Border.symmetric(
+                                      horizontal:
+                                          BorderSide(color: Colors.black12))),
+                              child: ListTile(
+                                leading: Image.asset(
+                                  'assets/images/file4.png',
+                                  fit: BoxFit.contain,
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                                title: Text(
+                                  fileName,
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w400),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.visible,
+                                  textAlign: TextAlign.left,
+                                ),
+                                onTap: () => _openFile(fileName),
+                                onLongPress: () =>
+                                    _showStorageOptions(fileName),
+                              ),
+                            );
+                          },
+                        ),
           floatingActionButton: _user?.providerData
                       .any((element) => element.providerId == "google.com") ??
                   true
@@ -395,8 +439,8 @@ class _FileScreenState extends State<FileScreen> {
                                             width: 0.4,
                                           ),
                                         ),
-                                        child: Column(
-                                          children: const [
+                                        child: const Column(
+                                          children: [
                                             Padding(
                                               padding:
                                                   EdgeInsets.only(top: 16.0),
@@ -445,8 +489,8 @@ class _FileScreenState extends State<FileScreen> {
                                             width: 0.4,
                                           ),
                                         ),
-                                        child: Column(
-                                          children: const [
+                                        child: const Column(
+                                          children: [
                                             Padding(
                                               padding:
                                                   EdgeInsets.only(top: 16.0),
@@ -554,3 +598,8 @@ class _FileScreenState extends State<FileScreen> {
     );
   }
 }
+
+/*
+
+
+*/
