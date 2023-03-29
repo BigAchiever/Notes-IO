@@ -250,31 +250,72 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   title: const Text('Logout',
                                       style: TextStyle(color: Colors.white)),
                                   onTap: () async {
-                                    try {
-                                      // sign out from Firebase authentication
-                                      await FirebaseAuth.instance.signOut();
+                                    Navigator.of(context)
+                                        .pop(); // close the drawer
+                                    await Future.delayed(const Duration(
+                                        milliseconds:
+                                            300)); // closing drawer with  delay
+                                    // ignore: use_build_context_synchronously
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          backgroundColor: Colors.black87,
+                                          title: const Text('Confirm Logout'),
+                                          content: const Text(
+                                              'Are you sure you are prepared for exam? 🙂'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: const Text('CANCEL'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: const Text('LOGOUT'),
+                                              onPressed: () async {
+                                                try {
+                                                  // sign out from Firebase authentication
+                                                  await FirebaseAuth.instance
+                                                      .signOut();
 
-                                      // sign out from Google
-                                      await _googleSignIn.signOut();
+                                                  // sign out from Google
+                                                  await _googleSignIn.signOut();
 
-                                      // add a delay before navigating to the login screen
-                                      await Future.delayed(
-                                          const Duration(milliseconds: 900));
+                                                  // add a delay before navigating to the login screen
+                                                  await Future.delayed(
+                                                      const Duration(
+                                                          milliseconds: 900));
 
-                                      // navigate to login page
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SignInScreen()),
-                                      );
+                                                  // navigate to login page
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const SignInScreen(),
+                                                    ),
+                                                  );
 
-                                      // Hide the loading indicator
-                                    } catch (e) {
-                                      if (kDebugMode) {
-                                        print(e.toString());
-                                      }
-                                    }
+                                                  // Hide the loading indicator
+                                                } catch (e) {
+                                                  if (kDebugMode) {
+                                                    print(e.toString());
+                                                  }
+                                                }
+                                              },
+                                            ),
+                                          ],
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8.0),
+                                            side: const BorderSide(
+                                              color: Colors.white10,
+                                              width: 1.0,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
                                   },
                                 ),
                                 SizedBox(height: size.height / 22),
