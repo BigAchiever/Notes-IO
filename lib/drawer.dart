@@ -252,9 +252,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                   onTap: () async {
                                     Navigator.of(context)
                                         .pop(); // close the drawer
-                                    await Future.delayed(const Duration(
-                                        milliseconds:
-                                            300)); // closing drawer with  delay
+
                                     // ignore: use_build_context_synchronously
                                     showDialog(
                                       context: context,
