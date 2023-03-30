@@ -11,7 +11,17 @@ class _FunnyLoadingIndicatorState extends State<FunnyLoadingIndicator>
   late AnimationController _controller;
   late Animation<double> _rotation;
 
-  final List<String> emojis = ['🤪', '🙃', '😜', '🙄', '🐼', '🫥', '🤢', '🥵'];
+  final List<String> emojis = [
+    '🤪',
+    '💀',
+    '😜',
+    '🙄',
+    '🐼',
+    '😁',
+    '🤢',
+    '🥵',
+    '🤦‍♂️',
+  ];
 
   @override
   void initState() {
@@ -32,18 +42,15 @@ class _FunnyLoadingIndicatorState extends State<FunnyLoadingIndicator>
     return AnimatedBuilder(
       animation: _rotation,
       builder: (context, child) {
-        return Transform.rotate(
-          angle: _rotation.value,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                emoji,
-                style: TextStyle(fontSize: 40),
-              ),
-              SizedBox(width: 10),
-            ],
-          ),
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              emoji,
+              style: const TextStyle(fontSize: 40),
+            ),
+            const SizedBox(width: 10),
+          ],
         );
       },
     );
