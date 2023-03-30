@@ -29,6 +29,8 @@ class FileScreen extends StatefulWidget {
 class _FileScreenState extends State<FileScreen> {
   bool _gridView = true;
   List<String> _fileNames = [];
+  List<String> _recentFileNames = [];
+
   bool _isUploading = false;
   late ConfettiController _confettiController;
   // final AudioCache _audioCache = AudioCache();
@@ -70,13 +72,12 @@ class _FileScreenState extends State<FileScreen> {
     await prefs.setBool('isGridView', isGridView);
   }
 
-
   Future<void> _loadFiles(String folderName) async {
     ListResult result = await FirebaseStorage.instance
         .ref()
         .child(widget.parentFolderName)
         .child(widget.folderName) // point to parent folder
-        // .child(folderName) // point to subfolder
+        .child(folderName) // point to subfolder
         .listAll();
     List<String> fileNames = [];
     for (Reference ref in result.items) {
@@ -85,6 +86,7 @@ class _FileScreenState extends State<FileScreen> {
     }
     setState(() {
       _fileNames = fileNames;
+      _recentFileNames = List.from(_recentFileNames)..addAll(fileNames);
     });
   }
 
@@ -211,7 +213,10 @@ class _FileScreenState extends State<FileScreen> {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 ListTile(
-                  leading: const Icon(Icons.file_download),
+                  leading: const Icon(
+                    Icons.file_download,
+                    color: Colors.green,
+                  ),
                   title: const Text('Access offline'),
                   onTap: () async {
                     Navigator.pop(context);
@@ -223,8 +228,11 @@ class _FileScreenState extends State<FileScreen> {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.share),
-                  title: const Text('Share the App'),
+                  leading: const Icon(
+                    Icons.favorite_outline,
+                    color: Colors.red,
+                  ),
+                  title: const Text("Share the App"),
                   onTap: () async {},
                 ),
                 const SizedBox(height: 10),
