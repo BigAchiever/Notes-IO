@@ -57,7 +57,7 @@ dependencies:
   animated_text_kit: ^4.2.2
   audioplayers: ^3.0.1
   confetti: ^0.7.0
-  shimmer: ^2.0.0
+  http: ^0.13.5
 
  
 
