@@ -21,6 +21,8 @@ class FolderScreen extends StatefulWidget {
 
 class _FolderScreenState extends State<FolderScreen> {
   late List<String> folderNames;
+
+  bool _gridView = true;
   String folderAsset2 = 'assets/images/folder6.gif';
   User? _user;
 
@@ -29,11 +31,14 @@ class _FolderScreenState extends State<FolderScreen> {
     super.initState();
     folderNames = [];
     _loadFolderNames();
-
+    _loadViewPreference(); // loading the previousely switched layout
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      setState(() {
-        _user = user;
-      });
+      if (mounted) {
+        // so it will not call the set state even after the state has ended
+        setState(() {
+          _user = user;
+        });
+      }
     });
 
     SharedPreferences.getInstance().then((prefs) {
@@ -122,6 +127,21 @@ class _FolderScreenState extends State<FolderScreen> {
     );
   }
 
+  //Saving the state of the layout
+  Future<void> _loadViewPreference() async {
+    final prefs = await SharedPreferences.getInstance();
+    final isGridView = prefs.getBool('isGridView1') ?? false;
+    setState(() {
+      _gridView = isGridView;
+    });
+  }
+
+  //Saving the state of the layout
+  Future<void> _saveViewPreference(bool isGridView) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isGridView1', isGridView);
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -157,6 +177,19 @@ class _FolderScreenState extends State<FolderScreen> {
         appBar: AppBar(
           backgroundColor: Colors.black54,
           title: Text(widget.folderName),
+          actions: [
+            GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _gridView = !_gridView;
+                  });
+                  _saveViewPreference(_gridView);
+                },
+                child: Padding(
+                  padding: EdgeInsets.only(right: size.width * 0.05),
+                  child: Icon((_gridView) ? Icons.list : Icons.grid_on),
+                )),
+          ],
         ),
         body: folderNames.isEmpty
             ? Center(
@@ -179,111 +212,153 @@ class _FolderScreenState extends State<FolderScreen> {
                   },
                 ),
               )
-            : GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: folderNames.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  final String folderName = folderNames[index];
-                  return GestureDetector(
-                    onTap: () {
-                      // Navigate to new screen of subfolders
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FileScreen(
-                              parentFolderName: widget.folderName,
-                              folderName: folderName),
+            : (_gridView)
+                ? GridView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: folderNames.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
+                    ),
+                    itemBuilder: (BuildContext context, int index) {
+                      final String folderName = folderNames[index];
+                      return GestureDetector(
+                        onTap: () {
+                          // Navigate to new screen of subfolders
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FileScreen(
+                                  parentFolderName: widget.folderName,
+                                  folderName: folderName),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.transparent,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: size.height / 8,
+                                    child: Image.asset(
+                                      folderAsset2,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Flexible(
+                                    flex: 1,
+                                    child: SizedBox(
+                                      width: size.width / 4,
+                                      child: Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          folderName,
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuButton(
+                                    itemBuilder: (_) => [
+                                      const PopupMenuItem(
+                                        value: 'customize',
+                                        child: Text('Customize'),
+                                      ),
+                                      const PopupMenuItem(
+                                        value: 'favorites',
+                                        child: Text('Favorites'),
+                                      ),
+                                    ],
+                                    onSelected: (value) async {
+                                      if (value == 'customize') {
+                                        // Show a dialog with a list of available assets
+                                        final asset2 = await showDialog<String>(
+                                          context: context,
+                                          builder: (context) =>
+                                              const AssetSelectionDialog2(),
+                                        );
+                                        // Update on user's selection
+                                        if (asset2 != null) {
+                                          setState(() {
+                                            folderAsset2 = asset2;
+                                          });
+                                          // Save the selected
+                                          final prefs = await SharedPreferences
+                                              .getInstance();
+                                          prefs.setString(
+                                              'folderAsset2', folderAsset2);
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     },
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.transparent,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: size.height / 8,
-                                child: Image.asset(
-                                  folderAsset2,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ],
+                  )
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: folderNames.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final String folderName = folderNames[index];
+                      // final String nameWithoutExtension =
+                      //     path.basenameWithoutExtension(fileName);
+                      return Container(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        decoration: const BoxDecoration(
+                            border: Border.symmetric(
+                                horizontal: BorderSide(color: Colors.black12))),
+                        child: ListTile(
+                          leading: Image.asset(
+                            folderAsset2,
+                            fit: BoxFit.contain,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Flexible(
-                                flex: 1,
-                                child: SizedBox(
-                                  width: size.width / 4,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      folderName,
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              PopupMenuButton(
-                                itemBuilder: (_) => [
-                                  const PopupMenuItem(
-                                    value: 'customize',
-                                    child: Text('Customize'),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 'favorites',
-                                    child: Text('Favorites'),
-                                  ),
-                                ],
-                                onSelected: (value) async {
-                                  if (value == 'customize') {
-                                    // Show a dialog with a list of available assets
-                                    final asset2 = await showDialog<String>(
-                                      context: context,
-                                      builder: (context) =>
-                                          const AssetSelectionDialog2(),
-                                    );
-                                    // Update on user's selection
-                                    if (asset2 != null) {
-                                      setState(() {
-                                        folderAsset2 = asset2;
-                                      });
-                                      // Save the selected
-                                      final prefs =
-                                          await SharedPreferences.getInstance();
-                                      prefs.setString(
-                                          'folderAsset2', folderAsset2);
-                                    }
-                                  }
-                                },
-                              ),
-                            ],
+                          title: Text(
+                            folderName,
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.start,
                           ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FileScreen(
+                                  parentFolderName: widget.folderName,
+                                  folderName: folderName),
+                            ),
+                          ),
+                          // onLongPress: () => _showStorageOptions(fileName),
+                        ),
+                      );
+                    },
+                  ),
         floatingActionButton: _user?.providerData
                     .any((element) => element.providerId == "google.com") ??
                 true

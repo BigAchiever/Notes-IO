@@ -20,7 +20,7 @@ class RecentsScreen extends StatefulWidget {
 
 class _RecentsScreenState extends State<RecentsScreen> {
   String _quoteWords =
-      'beep boop beep!'; // initialize with an empty list of words
+      'beep boop beep.. hey there! -.-'; // initialize with an empty list of words
   // int _currentWordIndex = 0; // index of the currently displayed word
 
   // here is the logic to load files from File_upload_screen
@@ -56,7 +56,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
         _recentFileNames = fileNames;
       });
     });
-    _getQuoteWords(); // fetch a quote when the screen is loaded
+    // _getQuoteWords(); // fetch a quote when the screen is loaded
   }
 
   void _openFile(String fileName) {
@@ -74,12 +74,14 @@ class _RecentsScreenState extends State<RecentsScreen> {
   void _getQuoteWords() async {
     final response =
         await http.get(Uri.parse('https://api.quotable.io/random'));
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 && mounted) {
+      // checking if widget is still mounted
       final Map<String, dynamic> data = jsonDecode(response.body);
       setState(() {
         _quoteWords = data['content'];
       });
-    } else {
+    } else if (mounted) {
+      // checking if widget is still mounted
       setState(() {
         _quoteWords = 'Failed to load quote';
       });
@@ -107,6 +109,7 @@ class _RecentsScreenState extends State<RecentsScreen> {
                   _quoteWords,
                   textAlign: TextAlign.center,
                   textStyle: const TextStyle(
+                    color: Colors.cyan,
                     fontSize: 16.0,
                     fontWeight: FontWeight.w400,
                   ),
@@ -145,66 +148,76 @@ class _RecentsScreenState extends State<RecentsScreen> {
           height: size.height / 42,
         ),
         Expanded(
-          child: GridView.builder(
-            physics: const BouncingScrollPhysics(),
-            itemCount: _recentFileNames.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-              mainAxisSpacing: 50,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              final String fileName = _recentFileNames[index];
-              final String nameWithoutExtension = path.basenameWithoutExtension(
-                  fileName); // Display filenames without the extention
-              return GestureDetector(
-                onTap: () => _openFile(fileName),
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.transparent,
+          child: _recentFileNames.isEmpty
+              ? const Center(
+                  child: Text(
+                    "Your recently opened notes\nwill appear here.",
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: size.height / 9,
-                            child: Image.asset(
-                              'assets/images/file4.png',
-                              fit: BoxFit.contain,
+                )
+              : GridView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: _recentFileNames.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 1,
+                    mainAxisSpacing: 50,
+                  ),
+                  itemBuilder: (BuildContext context, int index) {
+                    final String fileName = _recentFileNames[index];
+                    final String nameWithoutExtension =
+                        path.basenameWithoutExtension(
+                            fileName); // Display filenames without the extention
+                    return GestureDetector(
+                      onTap: () => _openFile(fileName),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.transparent,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: size.height / 9,
+                                  child: Image.asset(
+                                    'assets/images/file4.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: size.height / 60),
-                      Flexible(
-                        flex: 1,
-                        child: SizedBox(
-                          width: size.width / 4,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              nameWithoutExtension,
-                              style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w400),
-                              maxLines: 3,
-                              overflow: TextOverflow.visible,
-                              textAlign: TextAlign.center,
+                            SizedBox(height: size.height / 60),
+                            Flexible(
+                              flex: 1,
+                              child: SizedBox(
+                                width: size.width / 4,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    nameWithoutExtension,
+                                    style: const TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.visible,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ],
     );

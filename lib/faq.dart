@@ -18,8 +18,10 @@ class _FAQScreenState extends State<FAQScreen> {
     "I want to become an Admin. What will I need to do?",
     "What else we will get here other than notes?",
     "Notes are also available on Moo___, No?",
+    "What does 'Access Offline' option do?",
     "Is this application available offline?",
-    "Will we recieve any credits for uploading our notes?"
+    "Why does the App hangs on my mobile phone?",
+    "Will we recieve any credits for uploading our notes?",
   ];
 
   final List<String> _answers = [
@@ -30,7 +32,9 @@ class _FAQScreenState extends State<FAQScreen> {
     "You can easily request to be come an Admin and get the power to manage the publication by becoming an Admin, you just need to tap on another option on the menu, fill the Google form and wait for next 24 hours, we will contact you! 🤝",
     "We will try to provide all the necessary resources which is required for you guys, so that you all don't have to switch to multiple applications to find study material.",
     "Yes, its totally your wish which platform you want to prefer, here you will find several modes and options in the reader available to comfortably prepare for your exams which you won't get on Moo___ and other platforms and Most importantly you won't find Notes by your own batch mates on Moo___ with all the important Study material!",
+    "It will load and save the notes in the application offline for you, so now you won't need to load the pages again and again 😷",
     "Not yet, But looking forward to it in later versions. There is much more to come so stay tuned! 💙",
+    "There might be some issue with the device compatiblity, Contact us throught main and send the ScreenShots please :)",
     "Yes obviously, We will be implementing that feature soon in future updates!",
   ];
 

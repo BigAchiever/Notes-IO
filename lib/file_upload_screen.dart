@@ -29,7 +29,8 @@ class FileScreen extends StatefulWidget {
 class _FileScreenState extends State<FileScreen> {
   bool _gridView = true;
   List<String> _fileNames = [];
-  List<String> _recentFileNames = [];
+  List<String> _recentFileNames =
+      []; // for loading files in recents screen as well
 
   bool _isUploading = false;
   late ConfettiController _confettiController;
@@ -42,7 +43,7 @@ class _FileScreenState extends State<FileScreen> {
   void initState() {
     super.initState();
     _loadFiles('');
-    _loadViewPreference();
+    _loadViewPreference(); // loading the previously switched layout
     _confettiController = ConfettiController();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       setState(() {
@@ -60,7 +61,7 @@ class _FileScreenState extends State<FileScreen> {
   //Saving the state of the layout
   Future<void> _loadViewPreference() async {
     final prefs = await SharedPreferences.getInstance();
-    final isGridView = prefs.getBool('isGridView') ?? false;
+    final isGridView = prefs.getBool('isGridView2') ?? false;
     setState(() {
       _gridView = isGridView;
     });
@@ -69,7 +70,7 @@ class _FileScreenState extends State<FileScreen> {
   //Saving the state of the layout
   Future<void> _saveViewPreference(bool isGridView) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isGridView', isGridView);
+    await prefs.setBool('isGridView2', isGridView);
   }
 
   Future<void> _loadFiles(String folderName) async {
@@ -255,6 +256,7 @@ class _FileScreenState extends State<FileScreen> {
     );
   }
 
+  // Confetti playing logic
   void _onPressed() {
     setState(() {
       _isAnimating = true;
