@@ -4,11 +4,13 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:ggits/file_upload_screen.dart';
-import 'package:ggits/new_asset2.dart';
+
 import 'package:path_provider/path_provider.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../assets_customization/new_asset2.dart';
+import 'file_upload_screen.dart';
 
 class FolderScreen extends StatefulWidget {
   final String folderName;
@@ -22,7 +24,7 @@ class FolderScreen extends StatefulWidget {
 class _FolderScreenState extends State<FolderScreen> {
   late List<String> folderNames;
 
-  bool _gridView = true;
+  bool _gridView = false;
   String folderAsset2 = 'assets/images/folder6.gif';
   User? _user;
 

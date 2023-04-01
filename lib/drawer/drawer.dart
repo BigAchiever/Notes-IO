@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ggits/funny_loading_animation.dart';
-import 'package:ggits/faq.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:ggits/authentication.dart';
+
+import '../screens/login_screen.dart';
+import '../screens/faq_screen.dart';
+import 'funny_loading_animation.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({Key? key}) : super(key: key);
@@ -290,7 +292,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const SignInScreen(),
+                                                          SignInScreen(),
                                                     ),
                                                   );
 

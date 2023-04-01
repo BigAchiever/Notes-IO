@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:ggits/file_viewer.dart';
+import 'package:ggits/file_viewer/file_viewer.dart';
 import 'package:path/path.dart' as path;
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +27,7 @@ class FileScreen extends StatefulWidget {
 }
 
 class _FileScreenState extends State<FileScreen> {
-  bool _gridView = true;
+  bool _gridView = false;
   List<String> _fileNames = [];
   List<String> _recentFileNames =
       []; // for loading files in recents screen as well

@@ -7,7 +7,9 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 
-import 'file_viewer.dart';
+import '../file_viewer/file_viewer.dart';
+
+
 
 class RecentsScreen extends StatefulWidget {
   const RecentsScreen({

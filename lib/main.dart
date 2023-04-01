@@ -2,12 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ggits/no_internet_state.dart';
-import 'package:ggits/authentication.dart';
-import 'package:ggits/home_screen.dart';
+import 'package:ggits/state/no_internet_state.dart';
+import 'Screens/login_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +44,11 @@ Future<void> main() async {
     final User? user = FirebaseAuth.instance.currentUser;
 
     // Routing to appropriate screen based on user authentication
-    homeScreen = user == null ? const SignInScreen() : const HomeScreen();
+    if (user == null) {
+      homeScreen = const SignInScreen();
+    } else {
+      homeScreen = const HomeScreen();
+    }
   }
 
   // Delay the routing of the home screen for 3 seconds

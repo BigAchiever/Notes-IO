@@ -5,15 +5,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ggits/dialoguebox.dart';
-import 'package:ggits/drawer.dart';
-import 'package:ggits/new_asset1.dart';
-import 'package:ggits/recents.dart';
-
-import 'package:ggits/subfolder_screen.dart';
+import 'package:ggits/screens/recents.dart';
+import 'package:ggits/screens/subfolder_screen.dart';
+import 'package:ggits/first_time_dialogue/dialoguebox.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rive/rive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../drawer/drawer.dart';
+import '../assets_customization/new_asset1.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

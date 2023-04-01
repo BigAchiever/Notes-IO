@@ -7,7 +7,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ggits/home_screen.dart';
+import 'package:ggits/screens/home_screen.dart';
+
 import 'package:ggits/main.dart';
 
 void main() {
