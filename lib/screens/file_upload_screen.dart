@@ -119,7 +119,8 @@ class _FileScreenState extends State<FileScreen> {
           .collection('files')
           .add({
         'fileName': fileName,
-        'folderName': folderName,
+        'folderName': widget.folderName,
+        'parentFolderName': widget.parentFolderName
       });
 
       uploadTask.whenComplete(() {

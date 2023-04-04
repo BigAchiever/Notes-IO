@@ -54,16 +54,19 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
       if (!file.existsSync()) {
         try {
           HttpClient httpClient = HttpClient();
-          HttpClientRequest request =
-              await httpClient.getUrl(Uri.parse(await FirebaseStorage.instance
+          HttpClientRequest request = await httpClient.getUrl(Uri.parse(
+              await FirebaseStorage.instance
                   .ref()
-                  .child("${widget.parentFolderName}/${widget.folderName}/${widget.fileName}") // TO TRY
+                  .child(
+                      "${widget.parentFolderName}/${widget.folderName}/${widget.fileName}") // TO TRY
                   // .child(widget.parentFolderName) // Outside Folder
                   // .child(widget.folderName) // Inside Folder
                   // .child(widget.fileName) // File name
                   .getDownloadURL()));
           request.headers.add('Authorization', 'Bearer $token');
-          HttpClientResponse response = await request.close();
+          HttpClientResponse response =
+              await request.close().timeout(const Duration(seconds: 30));
+
           response.pipe(file.openWrite());
         } on FirebaseException catch (e) {
           if (kDebugMode) {
@@ -94,7 +97,6 @@ class _ViewFileScreenState extends State<ViewFileScreen> {
               child: CircularProgressIndicator(),
             )
           : FutureBuilder<void>(
-            
               future: PdftronFlutter.openDocument(_filePath!),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {

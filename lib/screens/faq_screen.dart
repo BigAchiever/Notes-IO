@@ -13,7 +13,8 @@ class _FAQScreenState extends State<FAQScreen> {
   final List<String> _questions = [
     "Where I can find the notes?",
     "Who has written these notes?",
-    "Are the notes complete according to what was taught in class?",
+    "The notes are not loaed when I open the Files"
+        "Are the notes complete according to what was taught in class?",
     "How can I Upload my Notes?",
     "I want to become an Admin. What will I need to do?",
     "What else we will get here other than notes?",
@@ -27,7 +28,8 @@ class _FAQScreenState extends State<FAQScreen> {
   final List<String> _answers = [
     'On HomePage you can find your Branch/Semester folder by scrolling the screen or by searching your Branch/Semester on the Search Bar. After opening you Branch folder you can easily select the subject notes you wanna access and tap on it. And there you go!',
     "These notes are written by your semester peers and are published by them on the application.",
-    "While we cannot provide a guarantee that the notes are comprehensive, we assure you that you will have access to all the necessary materials to effectively prepare for your exam.",
+    "you can fix this by either using 'Access Offline' option or you can simply close the ocumnet ones and open it again, It may resolve your issue. If not feel free to contact us :)"
+        "While we cannot provide a guarantee that the notes are comprehensive, we assure you that you will have access to all the necessary materials to effectively prepare for your exam.",
     "Great Initiative, You can easily request to upload your notes without becoming an admin by yourself. Just navigate to the menu, tap on 'Request to Upload', and there you go fill out the google form. After the verification process notes will be published",
     "You can easily request to be come an Admin and get the power to manage the publication by becoming an Admin, you just need to tap on another option on the menu, fill the Google form and wait for next 24 hours, we will contact you! 🤝",
     "We will try to provide all the necessary resources which is required for you guys, so that you all don't have to switch to multiple applications to find study material.",

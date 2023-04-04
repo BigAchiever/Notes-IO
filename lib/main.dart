@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ggits/state/no_internet_state.dart';
@@ -12,7 +13,19 @@ import 'Screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+      apiKey: "AIzaSyAFtft9FsltM1DbQG9-bEoFb9aeCazmLgc",
+      appId: "1:373475310470:web:d7ac48f72198c17eae4a07",
+      messagingSenderId: "373475310470",
+      projectId: "ggits-97610",
+      storageBucket: "ggits-97610.appspot.com",
+    ));
+  } else {
+    await Firebase.initializeApp();
+  }
+
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
   ));
@@ -66,6 +79,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
         fontFamily: 'Lato',
