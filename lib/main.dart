@@ -16,8 +16,8 @@ Future<void> main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
-      apiKey: "AIzaSyAFtft9FsltM1DbQG9-bEoFb9aeCazmLgc",
-      appId: "1:373475310470:web:d7ac48f72198c17eae4a07",
+      apiKey: "Key",
+      appId: "ID",
       messagingSenderId: "373475310470",
       projectId: "ggits-97610",
       storageBucket: "ggits-97610.appspot.com",
